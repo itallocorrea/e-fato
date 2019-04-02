@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>eFato - Cadastro de usuário</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <div class="voltar">
+    <a href="http://localhost:8080/voltar" title="Voltar">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
+  <!-- cabecalho -->
+  <div class="cabecalho container">
+    <h4 class="tituloPrincipal">Cadastro de usuário</h4>
+  </div>
+  <div class="formulario container text-center">
+    <form class="form-signin" action="./criar/finalizar" method="POST">
+      <!-- dados para cadastro -->
+      <input type="text" name="nome" class="offset-md-4 col-md-4 mb-2 form-control" placeholder="seu nome" required autofocus>
+      <input type="text" name="login" id="login" class="offset-md-4 col-md-4 mb-2 form-control" placeholder="login" required>
+      <input type="password" name="senha" id="senha" class="offset-md-4 col-md-4 mb-2 form-control" placeholder="sua senha" required>
+      <input type="email" name="email" class="offset-md-4 col-md-4 mb-2 form-control" placeholder="e-mail" required>
+      <!-- dados para cadastro -->
+
+      <!-- tipo de usuario -->
+      <label class="label-radio">Eu sou: </label>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo" id="radio1" value="A" checked>
+        <label class="form-check-label" for="radio1">Aluno</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="tipo" id="radio2" value="P">
+        <label class="form-check-label" for="radio2">Professor</label>
+      </div>
+      <!-- fim tipo de usuario -->
+
+      <button class="offset-md-4 col-md-4 mb-3 btn btn-lg btn-success btn-block" type="submit">
+        cadastrar
+        <i class="fas fa-check"></i>
+      </button>
+      <br>
+      <span class="feedbackErro" th:text="${feedbackErro}" ></span>
+      <span class="feedbackOk" th:text="${feedbackOk}" ></span>
+      <br>
+      <span th:if="${feedbackOk} == 'Cadastro realizado com sucesso!'">
+          <a href="http://localhost:8080/">Fazer login</a>
+      </span>
+    </form>
+
+  </div>
+  <!-- rodape -->
+  <div class="rodape container-fluid"></div>
+</body>
+  <script src="http://localhost:8080/js/val.js"></script>
+</html>

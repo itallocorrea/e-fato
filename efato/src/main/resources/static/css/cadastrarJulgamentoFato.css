@@ -1,0 +1,35 @@
+
+.cadastrarJulgamentoFato label{
+    color: #28a745;
+}
+.cadastrarJulgamentoFato label > span{
+    color: black;
+}
+
+.cadastrarJulgamentoFato .tituloSecundario{
+    color: #28a745;
+    margin: 0.5cm 0 0.5cm 0;
+    font-weight: 700;
+    font-size: 15pt;
+}
+
+.cadastrarJulgamentoFato table i{ 
+    margin-top: 0.2cm;
+    font-size: 15pt;
+}
+
+.cadastrarJulgamentoFato table i:hover{
+    color: #28a745;
+}
+
+.cadastrarJulgamentoFato .esquerda, .direita{
+    padding: 0.5cm;
+}
+
+.cadastrarJulgamentoFato .direita{
+    border-left: 0.5px solid #28a745;
+}
+
+.cadastrarJulgamentoFato .form-group > div{
+    margin-bottom: 0.2cm;
+}

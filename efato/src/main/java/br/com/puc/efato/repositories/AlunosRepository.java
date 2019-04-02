@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import br.com.puc.efato.models.db.Aluno;
 
 @Repository
-public interface AlunosRepository extends CrudRepository<Aluno, Integer>  {
-
+public interface AlunosRepository extends CrudRepository<Aluno, String>  {
+    Aluno findByLogin(String login);
 }

@@ -1,0 +1,81 @@
+/* IMPORT */
+@import url('login.css');
+@import url('cabecalho.css');
+@import url('rodape.css');
+@import url('formulario.css');
+@import url('areaSelecao.css');
+@import url('tabela.css');
+@import url('cadFatos.css');
+@import url('paralelo.css');
+@import url('cadastroTurma.css');
+@import url('visualizarTurma.css');
+@import url('cadastrarJulgamentoFato.css');
+@import url('estatisticas.css');
+@import url('fato.css');
+
+/* GERAL */
+body{
+    background-color: #bdbdbd;
+}
+
+body a, body a:hover {
+    color: #009e47;
+}   
+
+h4 > a , h4 > a:hover ,h4 > a:focus{
+    text-decoration: none;
+    color: white
+}
+
+@media only screen and (min-width: 600px) {
+    .rodape{
+        display: block;
+    } 
+}
+ 
+.spaceTop {
+    margin-top: 2cm;
+}
+
+#modalSemEquipe{
+    margin-top: 2cm;
+}
+
+#modalSemEquipe .close{
+    color: red;
+}
+
+#modalSemEquipe .modal-title{
+    color: #009e47;
+}
+
+.lider{
+    margin-left: 1cm;
+    color: #b5b525;
+}
+
+.feedbackOk{
+    color: #155724;
+    font-weight: 700;
+}
+
+.feedbackErro{
+    color: red;
+    font-weight: 700;
+}
+
+.voltar{
+    color: #009e47;
+    font-size: 23pt;
+    margin-left: 2cm;
+    margin-top: -0.3cm;
+    position: absolute;
+}
+
+.menu{
+    color: #009e47;
+    font-size: 23pt;
+    margin-right: 1cm;
+    position: relative;
+    float: right;
+}

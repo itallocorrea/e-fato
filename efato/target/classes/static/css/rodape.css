@@ -1,0 +1,13 @@
+.rodape{
+    background-color: #009e47; 
+    position: absolute;
+    bottom: 0;
+    height: 0.4cm;
+}
+
+
+@media only screen and (max-height: 400px) {
+    .rodape{
+        display: none;
+    }
+}

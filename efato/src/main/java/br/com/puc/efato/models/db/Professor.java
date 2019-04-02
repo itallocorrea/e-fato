@@ -8,8 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
-@Entity(name = "aluno")
-public class Aluno implements Serializable{
+@Entity(name = "professor")
+public class Professor implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	@Id
@@ -23,6 +23,7 @@ public class Aluno implements Serializable{
 	private String login;
 	
 	private String senha;
+
 
 	public long getCodigo() {
 		return codigo;
@@ -55,15 +56,16 @@ public class Aluno implements Serializable{
 		this.senha = senha;
 	}
 
-	public Aluno(){
+	public Professor(){
 
 	}
 
-	public Aluno(UsuarioRequest usuarioRequest){
+	public Professor(UsuarioRequest usuarioRequest){
 		this.nome = usuarioRequest.getNome();
 		this.email = usuarioRequest.getEmail();
 		this.login = usuarioRequest.getLogin();
 		this.senha = usuarioRequest.getSenha();
 	}
+
 
 }

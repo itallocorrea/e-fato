@@ -1,0 +1,20 @@
+.cadastroTurma .tituloSecundario{
+    margin-top: 1cm;
+    color: #28a745;
+}
+
+.cadastroTurma table i:hover{
+    color: red;
+}
+
+.cadastroTurma form > button {
+    margin-top: 1cm;
+}
+
+.cadastroTurma label{
+    color: #28a745;
+}
+
+.cadastroTurma .direita:nth-child(even){
+    border-left: 1px solid rgba(108, 117, 125,0.1); 
+}

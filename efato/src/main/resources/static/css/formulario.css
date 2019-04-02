@@ -1,0 +1,11 @@
+.formulario {
+    padding-top: 1cm;
+}
+
+.formulario .label-radio {
+    font-weight: 700;
+    padding: 10px 0 10px 0;
+    margin-right: 10px;
+    color: #28a745;
+
+}

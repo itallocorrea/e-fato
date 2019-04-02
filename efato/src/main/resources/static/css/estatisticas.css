@@ -1,0 +1,42 @@
+ .estatisticas label{
+     color: #28a745;
+ }
+
+ .estatisticas label > span{
+    color: #212529;
+ }
+
+ .estatisticas table, .conteudo{
+     margin-top: 1.5cm;
+ }
+
+ .estatisticas .drop{
+     margin: 0;
+ }
+
+ .estatisticas .card-header{
+     padding: 0;
+ }
+
+ .estatisticas .card-body{
+     padding: 0;
+ }
+
+ .estatisticas button{
+    color: #28a745;
+    text-decoration: none;
+ }
+
+ .estatisticas button:hover{
+    color: #28a745;
+    text-decoration: none;
+    font-weight: 500;
+ }
+
+ .estatisticas .fa-arrow-up{
+     color: green;
+ }
+ 
+ .estatisticas .fa-arrow-down{
+     color: red;
+ }
