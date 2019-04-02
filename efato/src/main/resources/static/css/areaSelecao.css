@@ -1,0 +1,29 @@
+.areaSelecao{
+    border: 1px solid #009e47;
+    padding: 0.5cm 0.5cm 0.5cm 0.5cm;
+}
+ 
+
+.btn-pesquisar{
+    text-align: right;
+}
+
+.btn-pesquisar button{  
+    margin-top: 0.3cm;
+    margin-right: 2.6cm;
+    width: 5cm;    
+}
+
+.rodape{
+    display: none;
+} 
+
+@media only screen and (min-width: 600px) {
+    .areaSelecao select {
+        margin-right: 0.8cm;
+    }
+    .rodape{
+        display: block;
+    } 
+}
+ 

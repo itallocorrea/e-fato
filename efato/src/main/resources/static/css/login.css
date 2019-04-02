@@ -1,0 +1,16 @@
+.login{
+    margin-top: 4cm; 
+    text-align: center;
+}
+
+.login .barraSuperior{ 
+    color: #009e47;
+    text-align: center;
+    margin-bottom: 0.5cm;
+}
+
+@media only screen and (max-height: 400px) {
+   .login {
+        margin: 0;
+    }
+}

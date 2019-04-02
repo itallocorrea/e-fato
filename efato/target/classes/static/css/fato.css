@@ -1,0 +1,18 @@
+.fato {
+    border: 3px solid #28a745;
+    margin-top: 1cm;
+}
+
+.fato .col{
+    padding: 1cm;
+    font-weight: 400;
+    text-align: justify;
+}
+.fato img{
+    width: 90%;
+}
+
+.fato .resposta{
+    width: 2cm;
+    margin: 0;
+}

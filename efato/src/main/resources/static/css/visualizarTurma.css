@@ -1,0 +1,23 @@
+.visualizarTurma label{
+    color: #28a745;
+}
+.visualizarTurma label > span{
+    color: black;
+}
+
+.visualizarTurma .tituloSecundario{
+    color: #28a745;
+    margin: 0.5cm 0 0.5cm 0;
+}
+
+.visualizarTurma table i:hover{
+    color: #28a745;
+}
+
+.visualizarTurma .esquerda, .direita{
+    padding: 0.5cm;
+}
+
+.visualizarTurma .direita{
+    border: 0.5px solid #28a745;
+}
