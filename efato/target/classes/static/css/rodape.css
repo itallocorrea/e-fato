@@ -1,6 +1,6 @@
 .rodape{
     background-color: #009e47; 
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 0.4cm;
 }

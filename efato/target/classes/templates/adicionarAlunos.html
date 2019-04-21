@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Adicionando alunos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="voltar">
+    <a href="#" onclick="window.history.back();" title="Voltar">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+<!-- cabecalho -->
+<div class="cabecalho container">
+    <h4 class="tituloPrincipal">Adicionar Alunos</h4>
+</div>
+
+<div class="container cadastroTurma">
+    <div class="row">
+        <!-- direita -->
+        <div class="col-md-3">
+                <h5 class="tituloSecundario">Dados da turma:</h5>
+                <!-- DISCIPLINA -->
+                <div class="form-group row">
+                    <label class="col" th:text="' Disciplina: '+ ${disciplina}"></label>
+                </div>
+                <!-- CURSO -->
+                <div class="form-group row">
+                    <label class="col" th:text="' Curso: '+ ${curso}"></label>
+                </div>
+                <!-- UNIDADE -->
+                <div class="form-group row">
+                    <label class="col" th:text="' Unidade: '+ ${unidade}"></label>
+                </div>
+                <a href="http://localhost:8080/turma/pesquisarTurma">
+                    <button class="col btn btn-lg btn-success btn-block" type="button">
+                        finalizar
+                        <i class="fas fa-check"></i>
+                    </button>
+                </a>
+        </div>
+        <!-- esquerda -->
+        <div class="col direita">
+            <form class="form-signin" action="./adicionarAluno" method="POST">
+            <h5 class="tituloSecundario">Adicionar alunos:</h5>
+            <div class="input-group">
+                <input type="text" id="buscarAluno" name="aluno_nome" class="form-control" placeholder="Digite o nome do aluno"/>
+                <input type="hidden" name="codigo" th:value="${codigo}"/>
+                <div class="input-group-append">
+                    <button class="btn btn-success" id="adicionarAluno" type="submit">
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <br>
+            <span class="feedbackErro" th:text="${feedbackErro}" ></span>
+            <span class="feedbackOk" th:text="${feedbackOk}" ></span>
+
+            <h5 class="tituloSecundario">Alunos adicionados:</h5>
+                <table class="table">
+                    <tbody>
+                        <tr th:each="aluno : ${alunos}">
+                            <td th:value="${aluno.codigo}" th:text="${aluno.nome}"></td>
+                            <td><i class="fas fa-times" th:value="${aluno.codigo}"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- rodape -->
+<div class="rodape container-fluid"></div>
+</body>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="http://localhost:8080/js/val.js"></script>
+<script>$ ('#buscarAluno').autocomplete ({source :  'http://localhost:8080/aluno/buscar'});</script>
+</html>

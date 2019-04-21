@@ -39,4 +39,23 @@ public class Utils {
     }
 
 
+    /* tipo de usuario*/
+    public static String tipoUsuario(String login,AlunosRepository alunosRepository,ProfessorRepository professorRepository){
+        String retorno = null;
+        Aluno aluno = alunosRepository.findByLogin(login);
+        if(aluno != null){
+            retorno = "A";
+        }else{
+            Professor professor = professorRepository.findByLogin(login);
+            if(professor != null){
+                retorno = "B";
+            }
+        }
+        return retorno;
+    }
+
+
+    //Somente para testar commit
+
+
 }

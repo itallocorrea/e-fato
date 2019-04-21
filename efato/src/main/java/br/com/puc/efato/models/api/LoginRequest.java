@@ -9,6 +9,13 @@ public class LoginRequest {
     @JsonProperty("senha")
     private String senha;
 
+    public LoginRequest(){}
+
+    public LoginRequest(String login, String senha){
+        this.login = login;
+        this.senha = senha;
+    }
+
     public String getLogin() {
         return login;
     }

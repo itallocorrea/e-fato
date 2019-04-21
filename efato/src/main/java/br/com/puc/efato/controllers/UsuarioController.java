@@ -1,19 +1,24 @@
 package br.com.puc.efato.controllers;
 
 import br.com.puc.efato.UsuarioLogado;
+import br.com.puc.efato.models.api.LoginRequest;
 import br.com.puc.efato.models.api.UsuarioRequest;
 import br.com.puc.efato.models.db.Aluno;
+import br.com.puc.efato.models.db.Curso;
 import br.com.puc.efato.models.db.Professor;
 import br.com.puc.efato.repositories.AlunosRepository;
+import br.com.puc.efato.repositories.CursoRepository;
 import br.com.puc.efato.repositories.ProfessorRepository;
 import br.com.puc.efato.utils.Utils;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -25,24 +30,36 @@ public class UsuarioController {
 	@Autowired
 	private ProfessorRepository professorRepository;
 	@Autowired
+	private CursoRepository cursoRepository;
+	@Autowired
 	private UsuarioLogado usuarioLogado;
 
-	@RequestMapping(value = "/criar", method = RequestMethod.GET)
+	@RequestMapping(value = "/cadastro", method = RequestMethod.GET)
 	public ModelAndView criar() {
-		return new ModelAndView("cadastrarUsuario");
+		ModelAndView modelAndView = new ModelAndView("cadastrarUsuario");
+		Iterable<Curso> cursos = cursoRepository.findAll();
+		modelAndView.addObject("cursos",cursos);
+		return modelAndView;
 	}
 
-	@RequestMapping(value = "/criar/finalizar", method = RequestMethod.POST)
+	@RequestMapping(value = "/cadastro/finalizar", method = RequestMethod.POST)
 	public ModelAndView criarUsuario(UsuarioRequest usuarioRequest){
 		ModelAndView modelAndView = new ModelAndView("cadastrarUsuario");
 		try{
 			if("A".equals(usuarioRequest.getTipo())){
-				alunosRepository.save(new Aluno(usuarioRequest));
+				Aluno aluno = new Aluno(usuarioRequest);
+				aluno.setCurso(cursoRepository.findByCodigo(usuarioRequest.getCurso()));
+				alunosRepository.save(aluno);
 			}else{
 				professorRepository.save(new Professor(usuarioRequest));
 			}
-			modelAndView = new ModelAndView("cadastrarUsuario");
-			modelAndView.addObject("feedbackOk","Cadastro realizado com sucesso!");
+			if("A".equals(Utils.tipoUsuario(usuarioRequest.getLogin(),alunosRepository,professorRepository))){
+				modelAndView = new ModelAndView("minhasTurmas");
+			}else{
+				modelAndView = new ModelAndView("pesquisarTurma");
+			}
+			usuarioLogado.setUsuario(new LoginRequest(usuarioRequest.getLogin(),usuarioRequest.getSenha()));
+			modelAndView.addObject("feedbackOk","Cadastro realizado com sucesso, seja bem vindo !");
 		}catch (Exception e ){
 			e.printStackTrace();
 			modelAndView.addObject("feedbackError",e.toString());
@@ -50,7 +67,7 @@ public class UsuarioController {
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/alterar", method = RequestMethod.GET)
+	@RequestMapping(value = "/alteracao", method = RequestMethod.GET)
 	public ModelAndView alterar(){
 		ModelAndView modelAndView = new ModelAndView("alterarUsuario");
 		try{
@@ -63,6 +80,9 @@ public class UsuarioController {
 				modelAndView.addObject("usuario",professor);
 				modelAndView.addObject("professor","true");
 			}
+			Iterable<Curso> cursos = cursoRepository.findAll();
+			modelAndView.addObject("cursos",cursos);
+			return modelAndView;
 		}catch (Exception e ){
 			e.printStackTrace();
 			modelAndView.addObject("feedbackError",e.toString());
@@ -70,18 +90,57 @@ public class UsuarioController {
 		return modelAndView;
 	}
 
-	//:TODO Corrigir para atualizar e não salvar novamente
-	@RequestMapping(value = "/alterar/finalizar", method = RequestMethod.POST)
+	@RequestMapping(value = "/alteracao/finalizar", method = RequestMethod.POST)
 	public ModelAndView alterarUsuario(UsuarioRequest usuarioRequest){
 		ModelAndView modelAndView = new ModelAndView("alterarUsuario");
 		try{
 			if("A".equals(usuarioRequest.getTipo())){
-				alunosRepository.save(new Aluno(usuarioRequest));
+				// se o cadastro que era professor agora é aluno, é necessário excluir o anterior
+				Professor professor = professorRepository.findByLogin(usuarioRequest.getLogin());
+				if(professor != null){
+					professorRepository.delete(professor);
+				}
+				Aluno aluno = alunosRepository.findByLogin(usuarioRequest.getLogin());
+				if(aluno == null){
+					// novo aluno
+					Aluno novoAluno = new Aluno(usuarioRequest);
+					novoAluno.setCurso(cursoRepository.findByCodigo(usuarioRequest.getCurso()));
+					alunosRepository.save(novoAluno);
+				}else{
+					// atualizar aluno
+					aluno.setNome(usuarioRequest.getNome());
+					aluno.setEmail(usuarioRequest.getEmail());
+					aluno.setSenha(usuarioRequest.getSenha());
+					aluno.setCurso(cursoRepository.findByCodigo(usuarioRequest.getCurso()));
+					alunosRepository.save(aluno);
+				}
 			}else{
-				professorRepository.save(new Professor(usuarioRequest));
+				// se o cadastro que era aluno agora é professor, é necessário excluir o anterior
+				Aluno aluno = alunosRepository.findByLogin(usuarioRequest.getLogin());
+				if(aluno != null){
+					alunosRepository.delete(aluno);
+				}
+				Professor professor = professorRepository.findByLogin(usuarioRequest.getLogin());
+				if(professor == null ){
+					// novo professor
+					professorRepository.save(new Professor(usuarioRequest));
+				}else{
+					// atualizar professor
+					professor.setNome(usuarioRequest.getNome());
+					professor.setEmail(usuarioRequest.getEmail());
+					professor.setSenha(usuarioRequest.getSenha());
+					professorRepository.save(new Professor(usuarioRequest));
+				}
 			}
-			modelAndView = new ModelAndView("cadastrarUsuario");
-			modelAndView.addObject("feedbackOk","Cadastro realizado com sucesso!");
+			if("A".equals(Utils.tipoUsuario(usuarioRequest.getLogin(),alunosRepository,professorRepository))){
+				modelAndView = new ModelAndView("minhasTurmas");
+			}else{
+				modelAndView = new ModelAndView("pesquisarTurma");
+			}
+			// atualizar usuario logado
+			usuarioLogado.setUsuario(new LoginRequest(usuarioRequest.getLogin(),usuarioRequest.getSenha()));
+			modelAndView = new ModelAndView("minhasTurmas");
+			modelAndView.addObject("feedbackOk","Alteração realizado com sucesso!");
 		}catch (Exception e ){
 			e.printStackTrace();
 			modelAndView.addObject("feedbackError",e.toString());
@@ -89,15 +148,13 @@ public class UsuarioController {
 		return modelAndView;
 	}
 
-	/*
-        verificar se nome de usuario já existe
-     */
-	@RequestMapping(value = "/existe", method = RequestMethod.GET)
-	public JSONObject usuarioExiste(@RequestParam(required = true) String login) throws JSONException {
-		JSONObject json = new JSONObject();
+	/*verificar se nome de usuario já existe*/
+	@RequestMapping(value = "/existe", method = RequestMethod.GET,produces = "application/json")
+	@ResponseBody
+	public ResponseEntity<String> usuarioExiste(@RequestParam(required = true) String login) throws JSONException {
 		if(Utils.loginExiste(login,alunosRepository,professorRepository)){
-			return json.put("exite",true);
-		}else return json.put("exite",false);
+			return new ResponseEntity<>("{\"existe\" : \"true\"}", HttpStatus.OK);
+		}else return new ResponseEntity<>("{\"existe\" : \"false\"}", HttpStatus.OK);
 	}
 
 }

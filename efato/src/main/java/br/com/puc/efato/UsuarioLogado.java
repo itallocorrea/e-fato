@@ -8,12 +8,23 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope(value = "session",  proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UsuarioLogado {
-    private LoginRequest usuarioLogado;
+    private static LoginRequest usuarioLogado;
+
     public void setUsuario(LoginRequest usuario) {
         this.usuarioLogado = usuario;
     }
+
     public LoginRequest getUsuario() {
         return usuarioLogado;
+    }
+
+    public void deslogar(){this.usuarioLogado = null;}
+
+    public static boolean usuarioLogado(){
+        if(usuarioLogado != null)
+            return true;
+        else
+            return false;
     }
 
 }

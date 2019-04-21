@@ -1,17 +1,17 @@
 /* IMPORT */
-@import url('login.css');
-@import url('cabecalho.css');
-@import url('rodape.css');
-@import url('formulario.css');
-@import url('areaSelecao.css');
-@import url('tabela.css');
-@import url('cadFatos.css');
-@import url('paralelo.css');
-@import url('cadastroTurma.css');
-@import url('visualizarTurma.css');
-@import url('cadastrarJulgamentoFato.css');
-@import url('estatisticas.css');
-@import url('fato.css');
+@import url('./login.css');
+@import url('./cabecalho.css');
+@import url('./rodape.css');
+@import url('./formulario.css');
+@import url('./areaSelecao.css');
+@import url('./tabela.css');
+@import url('./cadFatos.css');
+@import url('./paralelo.css');
+@import url('./cadastroTurma.css');
+@import url('./visualizarTurma.css');
+@import url('./cadastrarJulgamentoFato.css');
+@import url('./estatisticas.css');
+@import url('./fato.css');
 
 /* GERAL */
 body{
@@ -78,4 +78,9 @@ h4 > a , h4 > a:hover ,h4 > a:focus{
     margin-right: 1cm;
     position: relative;
     float: right;
+}
+
+.botoes-acoes{
+    font-size: 18pt;
+    border: none;
 }

@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://localhost:8080/css/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
 </head>
 
 <body class="text-center">
@@ -25,9 +25,10 @@
         <button id="entrar" class="offset-md-4 col-md-4 mb-3 btn btn-lg btn-success btn-block" type="submit">
             entrar<i class="fas fa-sign-in-alt"></i>
         </button>
+        <span class="feedbackOk" th:text="${feedbackOk}" ></span>
         <span class="feedbackErro" th:text="${feedbackErro}" ></span>
         <br>
-        <a href="./usuario/criar">Não tem login? Cadastre-se aqui.</a>
+        <a href="./usuario/cadastro">Não tem login? Cadastre-se aqui.</a>
     </form>
 </div>
 

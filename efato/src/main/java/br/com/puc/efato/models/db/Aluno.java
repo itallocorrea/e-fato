@@ -2,10 +2,7 @@ package br.com.puc.efato.models.db;
 
 import br.com.puc.efato.models.api.UsuarioRequest;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity(name = "aluno")
@@ -23,6 +20,17 @@ public class Aluno implements Serializable{
 	private String login;
 	
 	private String senha;
+
+	@OneToOne
+	private Curso curso;
+
+	public Curso getCurso() {
+		return curso;
+	}
+
+	public void setCurso(Curso curso) {
+		this.curso = curso;
+	}
 
 	public long getCodigo() {
 		return codigo;

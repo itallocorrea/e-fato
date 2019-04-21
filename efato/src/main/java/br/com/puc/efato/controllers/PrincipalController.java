@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
@@ -36,16 +37,32 @@ public class PrincipalController {
         ModelAndView modelAndView;
         if(Utils.isLoginValido(loginRequest,alunosRepository,professorRepository)){
             usuarioLogado.setUsuario(loginRequest);
-            return new ModelAndView("minhasTurmas");
+            if("A".equals(Utils.tipoUsuario(loginRequest.getLogin(),alunosRepository,professorRepository))){
+                return new ModelAndView("minhasTurmas");
+            }else{
+                return new ModelAndView("pesquisarTurma");
+            }
         }
         modelAndView = new ModelAndView("index");
         modelAndView.addObject("feedbackErro","Login Inválido");
         return modelAndView;
     }
 
-    @RequestMapping(value = "/voltar", method = RequestMethod.GET)
-    public String rateHandler(HttpServletRequest request) {
-        return "redirect:"+ request.getHeader("Referer");
+    @RequestMapping(value = "/deslogar", method = RequestMethod.GET)
+    public ModelAndView deslogar(LoginRequest loginRequest){
+        ModelAndView modelAndView = new ModelAndView("index");
+        usuarioLogado.deslogar();
+        modelAndView.addObject("feedbackOk","Volte Sempre!");
+        return modelAndView;
     }
+
+    @RequestMapping(value = "/voltar")
+    String testRedirection(HttpServletRequest request){
+        return Optional.ofNullable(request.getHeader("Referer"))
+                .map(requestUrl -> "redirect:" + requestUrl)
+                .orElse("/");
+    }
+
+
 
 }

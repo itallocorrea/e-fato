@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Pesquisar Turma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+</head>
+
+<body class="text-center">
+<div class="voltar">
+    <a href="#" onclick="window.history.back();" title="Voltar">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+<!-- menu -->
+<div class="menu">
+    <a href="http://localhost:8080/deslogar" title="Sair">
+        <i class="fas fa-door-open"></i>
+    </a>
+</div>
+<!-- cabecalho -->
+<div class="cabecalho container">
+    <h4 class="tituloPrincipal">Pesquisar Turmas</h4>
+</div>
+<form class="form-signin" action="./pesquisarTurma" method="GET">
+    <!-- areaSelecao -->
+    <div class="areaSelecao container">
+        <div class="form-inline">
+            <select name="disciplina_codigo" class="form-control col-sm-12 offset-md-1 col-md-3">
+                <option th:value="0" selected>Escolha a disciplina</option>
+                <option th:each="disciplina : ${disciplinas}" th:value="${disciplina.codigo}" th:text="${disciplina.descricao}"></option>
+            </select>
+            <select name="curso_codigo" class="form-control  col-sm-12  col-md-3">
+                <option th:value="0" selected>Escolha o curso</option>
+                <option th:each="curso : ${cursos}" th:value="${curso.codigo}" th:text="${curso.descricao}"></option>
+            </select>
+            <select name="unidade_codigo" class="form-control  col-sm-12  col-md-3 ">
+                <option th:value="0" selected>Escolha a unidade</option>
+                <option th:each="unidade : ${unidades}" th:value="${unidade.codigo}" th:text="${unidade.descricao}"></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="container-fluid btn-pesquisar">
+        <button type="submit" class="btn btn-success" title="Aplicar filtro">
+            Pesquisar
+        </button>
+    </div>
+</form>
+<!-- tabela -->
+<div class="tabela container">
+    <table class="table table-bordered">
+        <thead>
+        <tr class="botoes-label">
+            <td colspan="4">
+                <!-- feedback -->
+                <span class="feedbackOk" th:text="${feedbackOk}" ></span>
+                <span class="feedbackErro" th:text="${feedbackErro}" ></span>
+            </td>
+            <td class="text-center botoes-acoes">
+                <a href="http://localhost:8080/turma/cadastro">
+                    <i class="fas fa-plus" title="Nova Turma"></i>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th scope="col">Código</th>
+            <th scope="col">Disciplina</th>
+            <th scope="col">Curso</th>
+            <th scope="col">Unidade</th>
+            <th scope="col">JF</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="turma : ${turmas}" >
+            <td scope="row" th:text="${turma.codigo}" >1</td>
+            <td th:text="${turma.descricaoDisciplina}" >Tecnologias Web</td>
+            <td th:text="${turma.descricaoCurso}" >Sistemas de Informação</td>
+            <td th:text="${turma.descricaoUnidade}" >Barreiro</td>
+            <td><i class="fas fa-search" title="Visualizar julgamentos"></i></td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+<!-- rodape -->
+<div class=" rodape container-fluid"></div>
+</body>
+
+</html>

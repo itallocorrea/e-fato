@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class UsuarioRequest {
 	
 	@JsonProperty("codigo")
-	private Integer codigo;
+	private Long codigo;
 	
 	@JsonProperty("nome")
 	private String nome;
@@ -20,15 +20,15 @@ public class UsuarioRequest {
 	private String senha;
 	
 	@JsonProperty("curso")
-	private String curso;
+	private long curso;
 
 	@JsonProperty("tipo")
 	private String tipo;
 	
-	public Integer getCodigo() {
+	public long getCodigo() {
 		return codigo;
 	}
-	public void setCodigo(Integer codigo) {
+	public void setCodigo(long codigo) {
 		this.codigo = codigo;
 	}
 	public String getNome() {
@@ -55,12 +55,15 @@ public class UsuarioRequest {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	public String getCurso() {
+
+	public long getCurso() {
 		return curso;
 	}
-	public void setCurso(String curso) {
+
+	public void setCurso(long curso) {
 		this.curso = curso;
 	}
+
 	public String getTipo() { return tipo; }
 	public void setTipo(String tipo) { this.tipo = tipo; }
 }

@@ -1,14 +1,12 @@
-/*
-    verificar se login alfanumerico de 5 a 20
- */
+//verificar se login alfanumerico de 5 a 10
 $(document).ready(function(){
     $("#login").focusout(function(){
         let login = document.getElementById("login").value;
         if(login === "")
             return;
 
-        if(login.length < 5 || login.length > 20){
-            $(".feedbackErro").html("Opa, login precisa ter entre 5 e 20 caracteres.");
+        if(login.length < 5 || login.length > 10){
+            $(".feedbackErro").html("Opa, login precisa ter entre 5 e 10 caracteres.");
             document.getElementById("login").value = "";
             return;
         }else{
@@ -27,9 +25,8 @@ $(document).ready(function(){
     });
 });
 
-/*
-    verificar se senha alfanumerico
- */
+
+//verificar se senha alfanumerico
 $(document).ready(function(){
     $("#senha").focusout(function(){
 
@@ -37,6 +34,66 @@ $(document).ready(function(){
 });
 
 
-/*
-    login unico
- */
+//login unico
+$(document).ready(function(){
+    $(".loginUnico").focusout(function(){
+        $.ajax({
+            url: "http://localhost:8080/usuario/existe?login="+document.getElementById("login").value,
+            success: function(data) {
+                if(data.existe === "true"){
+                    $(".feedbackErro").html("Opa, esse nome de usuário já existe. ");
+                    document.getElementById("login").value = "";
+                    console.log(data.existe);
+                    return;
+                }
+            }
+        });
+    });
+});
+
+
+//mostrar campo curso ?
+$(document).ready(function(){
+    if(window.location.href !== 'http://localhost:8080/usuario/cadastro')
+        return;
+
+    deveMostrarCurso(document.getElementsByName("tipo")[1].checked);
+    $(".tipo").click(function(){
+         deveMostrarCurso(document.getElementsByName("tipo")[1].checked);
+    });
+});
+function deveMostrarCurso(tipo) {
+    if(tipo == true){
+        $("#labelCurso").hide();
+        $("#curso").hide();
+    }else{
+        $("#labelCurso").show();
+        $("#curso").show();
+    }
+}
+
+//verificar senha sequencia de numeros e caracteres
+$(document).ready(function(){
+    $("#senha").focusout(function(){
+        let senha = document.getElementById("senha").value;
+        if(senha === "")
+            return;
+        let regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;
+        if(!regex.test(senha)){
+            $(".feedbackErro").html("Opa, senha deve ter letras e números.");
+            document.getElementById("senha").value = "";
+            return;
+        }else{
+            $(".feedbackErro").html("");
+        }
+
+    });
+});
+
+function adicionarAluno () {
+    let aluno = $('#adicionarAluno')[0].value;
+    $('#alunosAdicionados')[0].innerHTML += '<br> <input type="text" value="aluno"> <i class="fas fa-times"></i>';
+}
+
+
+
