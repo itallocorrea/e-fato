@@ -8,7 +8,7 @@ import br.com.puc.efato.repositories.ProfessorRepository;
 
 public class Utils {
 
-    public static Boolean isLoginValido(LoginRequest loginRequest,AlunosRepository alunosRepository,ProfessorRepository professorRepository) {
+    public static Boolean isLoginValido(LoginRequest loginRequest, AlunosRepository alunosRepository, ProfessorRepository professorRepository) {
         Aluno aluno = alunosRepository.findByLogin(loginRequest.getLogin());
         if(aluno != null){
             return (aluno.getSenha().equals(loginRequest.getSenha()));
@@ -26,36 +26,18 @@ public class Utils {
         Verificar se login já existe
      */
     public static Boolean loginExiste(String login,AlunosRepository alunosRepository,ProfessorRepository professorRepository) {
-        Aluno aluno = alunosRepository.findByLogin(login);
-        if(aluno != null){
-            return true;
-        }else{
-            Professor professor = professorRepository.findByLogin(login);
-            if(professor != null){
-                return true;
-            }
-        }
-        return false;
+    	return (alunosRepository.findByLogin(login) != null || professorRepository.findByLogin(login) != null);
     }
 
 
     /* tipo de usuario*/
     public static String tipoUsuario(String login,AlunosRepository alunosRepository,ProfessorRepository professorRepository){
-        String retorno = null;
-        Aluno aluno = alunosRepository.findByLogin(login);
-        if(aluno != null){
-            retorno = "A";
-        }else{
-            Professor professor = professorRepository.findByLogin(login);
-            if(professor != null){
-                retorno = "B";
-            }
+        if(alunosRepository.findByLogin(login) != null) {
+        	return "A";
+        } else if (professorRepository.findByLogin(login) != null) {
+        	return "B";
+        } else {
+        	return null;
         }
-        return retorno;
     }
-
-
-    //Somente para testar commit
-
-
 }
