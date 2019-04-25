@@ -14,4 +14,6 @@ public interface TurmaRepository extends CrudRepository<Turma, Long>  {
     @Query("SELECT t FROM turma t WHERE (curso_codigo = ?1 OR ?1 = 0) AND (disciplina_codigo = ?2 OR ?2 = 0) AND (unidade_codigo = ?3 OR ?3 = 0) ")
     List<Turma> findByFilter(String disciplica, String curso, String unidade);
 
+
+
 }

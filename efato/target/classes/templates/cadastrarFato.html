@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Pesquisar Turma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="voltar">
+        <a href="#" onclick="window.history.back();" title="Voltar">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+    </div>
+    <!-- cabecalho -->
+    <div class="cabecalho container">
+        <h4 class="tituloPrincipal">Cadastro de fatos</h4>
+    </div>
+    <div class="cadFatos container">
+        <form class="form-signin" action="./cadastrar" method="POST">
+            <!-- dados para cadastro -->
+
+            <label class="offset-md-4 col-md-4 mb-2" for="1">Tópico da Disciplina</label>
+            <select name="topico_codigo"  class="offset-md-4 col-md-4 mb-2 form-control" id="1" required autofocus>
+                <option th:each=" topico : ${topicos}" th:text="${topico.descricao}" th:value="${topico.codigo}"></option>
+            </select>
+            
+            <label class="offset-md-4 col-md-4 mb-2" for="2">Texto do Fato</label>
+            <textarea name="texto" class="offset-md-4 col-md-4 mb-2 form-control" id="2" rows="5" required></textarea>
+            <!-- dados para cadastro -->
+
+            <!-- tipo de usuario -->
+            <label class="offset-md-4">Resposta: </label>
+            <div class="form-check form-check-inline ">
+                <input class="form-check-input" type="radio" name="resposta" id="radio1" value="V" required>
+                <label class="form-check-label" for="radio1">V</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="resposta" id="radio2" value="F" required>
+                <label class="form-check-label" for="radio2">F</label>
+            </div>
+            <!-- fim tipo de usuario -->
+
+            <!-- inicio jf -->
+            <input type="hidden" th:value="${jf_codigo}" name="jf_codigo">
+            <!-- fim jf -->
+
+            <button class="offset-md-4 col-md-4 mb-3 btn btn-lg btn-success btn-block" type="submit">
+                cadastrar
+                <i class="fas fa-check"></i>
+            </button>
+
+            <br>
+            <div class="container text-center">
+                <span class="feedbackOk" th:text="${feedbackOk}" ></span>
+            </div>
+
+        </form>
+    </div>
+    <!-- rodape -->
+    <div class="rodape container-fluid"></div>
+</body>
+
+</html>

@@ -83,4 +83,9 @@ h4 > a , h4 > a:hover ,h4 > a:focus{
 .botoes-acoes{
     font-size: 18pt;
     border: none;
+    vertical-align: inherit !important;
+}
+
+thead{
+    font-weight: 600;
 }

@@ -35,15 +35,15 @@
     <div class="areaSelecao container">
         <div class="form-inline">
             <select name="disciplina_codigo" class="form-control col-sm-12 offset-md-1 col-md-3">
-                <option th:value="0" selected>Escolha a disciplina</option>
+                <option th:value="0" selected>Todas as disciplinas</option>
                 <option th:each="disciplina : ${disciplinas}" th:value="${disciplina.codigo}" th:text="${disciplina.descricao}"></option>
             </select>
             <select name="curso_codigo" class="form-control  col-sm-12  col-md-3">
-                <option th:value="0" selected>Escolha o curso</option>
+                <option th:value="0" selected>Todos os cursos</option>
                 <option th:each="curso : ${cursos}" th:value="${curso.codigo}" th:text="${curso.descricao}"></option>
             </select>
             <select name="unidade_codigo" class="form-control  col-sm-12  col-md-3 ">
-                <option th:value="0" selected>Escolha a unidade</option>
+                <option th:value="0" selected>Todas as unidades</option>
                 <option th:each="unidade : ${unidades}" th:value="${unidade.codigo}" th:text="${unidade.descricao}"></option>
             </select>
         </div>
@@ -85,7 +85,11 @@
             <td th:text="${turma.descricaoDisciplina}" >Tecnologias Web</td>
             <td th:text="${turma.descricaoCurso}" >Sistemas de Informação</td>
             <td th:text="${turma.descricaoUnidade}" >Barreiro</td>
-            <td><i class="fas fa-search" title="Visualizar julgamentos"></i></td>
+            <td>
+                <a th:href="@{http://localhost:8080/jf/visualizar(turma_codigo=${turma.codigo})}">
+                    <i class="fas fa-search" title="Visualizar julgamentos"></i>
+                </a>
+            </td>
         </tr>
 
         </tbody>
@@ -94,5 +98,11 @@
 <!-- rodape -->
 <div class=" rodape container-fluid"></div>
 </body>
+<script src="http://localhost:8080/js/val.js"></script>
+<script>
+    $('select[name=disciplina_codigo]')[0].value = getParams().disciplina_codigo === undefined ? 0 : getParams().disciplina_codigo;
+    $('select[name=curso_codigo]')[0].value = getParams().curso_codigo === undefined ? 0 : getParams().curso_codigo;
+    $('select[name=unidade_codigo]')[0].value = getParams().unidade_codigo === undefined ? 0 : getParams().unidade_codigo;
+</script>
 
 </html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Pesquisar Turma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="voltar">
+    <a href="#" onclick="window.history.back();" title="Voltar">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+<!-- cabecalho -->
+<div class="cabecalho container">
+    <h4 class="tituloPrincipal" th:text="${turma.descricaoDisciplina}" >001 - Tecnologias Web</h4>
+</div>
+
+<div class="container visualizarTurma">
+
+    <div class="row">
+        <div class="container-fluid">
+            <label class="container" >Curso: <span th:text="${turma.descricaoCurso}" >Sistemas de Informação</span></label>
+            <label class="container">Unidade: <span th:text="${turma.descricaoUnidade}" >Barreiro</span></label>
+        </div>
+        <!-- direita -->
+        <div class="col">
+            <div class="direita form-group row">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <td colspan="2"><h5 class="tituloSecundario">Julgamento de fatos:</h5></td>
+                            <td class="botoes-acoes">
+                                <a th:href="@{http://localhost:8080/jf/cadastro( turma_codigo=${turma.codigo},jf_codigo=0 )}">
+                                    <i class="fas fa-plus" title="Novo JF"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Descrição</td>
+                            <td>Status</td>
+                            <td>Ação</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="jf : ${jfs}">
+                            <td th:text="${jf.descricao}" ></td>
+                            <td th:text="${jf.descricaoStatus}"></td>
+                            <td>
+                                <a th:href="@{ http://localhost:8080/jf/cadastro(turma_codigo=${turma.codigo},jf_codigo=${jf.codigo} ) }" title="Visualizar JF">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- rodape -->
+<div class="rodape container-fluid"></div>
+</body>
+
+</html>

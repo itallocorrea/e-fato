@@ -1,5 +1,6 @@
 package br.com.puc.efato.controllers;
 
+import br.com.puc.efato.models.api.LoginRequest;
 import br.com.puc.efato.models.api.TurmaRequest;
 import br.com.puc.efato.models.db.Aluno;
 import br.com.puc.efato.models.db.Turma;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Controller
@@ -102,9 +105,16 @@ public class TurmaController {
     }
 
     @RequestMapping(value = "/minhasTurmas", method = RequestMethod.GET)
-    public ModelAndView minhasTurmas(){
-        ModelAndView modelAndView = new ModelAndView("minhasTurmas");
-        return modelAndView;
+    public ModelAndView minhasTurmas(HttpSession session){
+        ArrayList<Turma> retorno = new ArrayList<>();
+        Aluno aluno = alunosRepository.findByLogin( ((LoginRequest) session.getAttribute("usuarioLogado")).getLogin() );
+        //todo: melhor busca no banco de dados
+        for(Turma turma : turmaRepository.findAll()) {
+            if (turma.getAlunos().contains(alunosRepository.findByLogin(aluno.getLogin()))) {
+                retorno.add(turma);
+            }
+        }
+        return new ModelAndView("minhasTurmas").addObject("turmas",retorno);
     }
 
     @RequestMapping(value = "/pesquisarTurma", method = RequestMethod.GET)

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Pesquisar Turma</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+</head>
+
+<body>
+<div class="voltar">
+    <a href="#" onclick="window.history.back();" title="Voltar">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+<!-- cabecalho -->
+<div class="cabecalho container">
+    <h4 class="tituloPrincipal">Cadastro de julgamento de fatos</h4>
+</div>
+
+<div class="container cadastrarJulgamentoFato">
+    <div class="row">
+        <div class="col">
+            <div class="container-fluid">
+                <label class="container">Turma: <span th:text="${turma.codigo} + ' - ' + ${turma.descricaoDisciplina}">001 - Tecnologias Web</span></label>
+            </div>
+            <form method="post" action="http://localhost:8080/jf/salvar">
+            <!-- esquerda -->
+            <div class="col">
+                <div class="esquerda form-group row">
+                    <div class="container">
+                        <input type="text" name="descricao" class="form-control" id="3" th:value="${jf.descricao}" placeholder="Descrição (Obrigatória)" required autofocus>
+                    </div>
+                    <h5 class="tituloSecundario row">Configurações: </h5>
+                    <div class="form-group row">
+                        <label for="1" class="col-md-8 col-form-label">Tamanho Máximo das Equipes: * </label>
+                        <div class="col-md-3">
+                            <input type="number" name="tamMaxEquipe" class="form-control" id="1" value="5" placeholder="5" required>
+                        </div>
+                        <label for="2" class="col-md-8 col-form-label">Tempo de Exibição dos Fatos: *</label>
+                        <div class="col-md-3">
+                            <input type="number" name="tempMax" class="form-control" id="2" value="5" placeholder="5" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="3" class="col col-form-label">Status: </label>
+                        <select name="status_codigo"  class="col-md-8 form-control" required>
+                            <option th:each="aux : ${status}" th:value="${aux.codigo}" th:text="${aux.descricao}"></option>
+                        </select>
+                    </div>
+                </div>
+
+                <input name="codigo" type="hidden" th:value="${jf.codigo}">
+                <input name="turma_codigo" type="hidden" th:value="${turma.codigo}">
+
+                <button class="offset-md-1 col-md-4 mb-3 btn btn-lg btn-success" type="submit">
+                    salvar
+                    <i class="fas fa-check"></i>
+                </button>
+
+                <a th:href="@{http://localhost:8080/jf/cancelar?(jf_codigo=${jf.codigo})}">
+                    <button class="offset-md-2 col-md-4 mb-3 btn btn-lg btn-danger" type="button">
+                        apagar
+                        <i class="fas fa-times"></i>
+                    </button>
+                </a>
+            </div>
+            </form>
+        </div>
+
+        <!-- direita -->
+        <div class="col">
+            <div class="direita form-group row">
+                <table class="table">
+                    <thead>
+                    <td colspan="3" class="tituloSecundario">Fatos:</td>
+                    <td>
+                        <a th:href="@{http://localhost:8080/fato/cadastro?(jf_codigo=${jf.codigo})}">
+                            <button class="btn btn-success btn-block">
+                                adicionar
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </a>
+                    </td>
+                    </thead>
+                    <thead>
+                    <tr>
+                        <td>Ordem</td>
+                        <td>Tópico</td>
+                        <td>Texto</td>
+                        <td>Resposta</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="fato : ${fatos}">
+                        <td th:text="${fato.codigo}"></td>
+                        <td th:text="${fato.descricaoTopico}" ></td>
+                        <td><i class="fas fa-search"></i></td>
+                        <td th:text="${fato.resposta}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!-- rodape -->
+<div class="rodape container-fluid"></div>
+</body>
+
+</html>

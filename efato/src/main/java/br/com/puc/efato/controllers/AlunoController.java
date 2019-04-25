@@ -21,7 +21,7 @@ public class AlunoController {
 
 	//:TODO Esse metódo precisa ser melhorado para que o repository busque no banco de dados somente o atributo nome da tabela Aluno (Refatoração)
 	@RequestMapping(value = "/buscar", method = RequestMethod.GET,produces = "application/json")
-		@ResponseBody
+	@ResponseBody
 	public Iterable<Aluno> buscarAlunos(@RequestParam(required = true) String term) throws JSONException {
 		Iterable<Aluno> alunos = alunosRepository.findByNomeContaining(term);
 		ArrayList nomeAlunos = new ArrayList();

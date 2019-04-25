@@ -25,15 +25,6 @@ $(document).ready(function(){
     });
 });
 
-
-//verificar se senha alfanumerico
-$(document).ready(function(){
-    $("#senha").focusout(function(){
-
-    });
-});
-
-
 //login unico
 $(document).ready(function(){
     $(".loginUnico").focusout(function(){
@@ -50,7 +41,6 @@ $(document).ready(function(){
         });
     });
 });
-
 
 //mostrar campo curso ?
 $(document).ready(function(){
@@ -95,5 +85,18 @@ function adicionarAluno () {
     $('#alunosAdicionados')[0].innerHTML += '<br> <input type="text" value="aluno"> <i class="fas fa-times"></i>';
 }
 
+// get params da URI
+function getParams () {
+    let query = location.search.slice(1);
+    let partes = query.split('&');
+    let data = {};
+    partes.forEach(function (parte) {
+        let chaveValor = parte.split('=');
+        let chave = chaveValor[0];
+        let valor = chaveValor[1];
+        data[chave] = valor;
+    });
+    return data;
+}
 
 

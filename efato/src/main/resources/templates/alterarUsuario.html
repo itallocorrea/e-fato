@@ -35,15 +35,7 @@
       <!-- dados para cadastro -->
 
       <!-- tipo de usuario -->
-      <label class="label-radio">Eu sou: </label>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input tipo" type="radio" name="tipo" id="radio1" value="A" th:checked="${aluno}" >
-        <label class="form-check-label" for="radio1">Aluno</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input tipo" type="radio" name="tipo" id="radio2" value="P" th:checked="${professor}">
-        <label class="form-check-label" for="radio2">Professor</label>
-      </div>
+      <input type="hidden" name="tipo" th:value="${tipo}" >
       <!-- fim tipo de usuario -->
 
       <div class="form-group">
