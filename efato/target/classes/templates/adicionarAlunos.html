@@ -73,7 +73,11 @@
                     <tbody>
                         <tr th:each="aluno : ${alunos}">
                             <td th:value="${aluno.codigo}" th:text="${aluno.nome}"></td>
-                            <td><i class="fas fa-times" th:value="${aluno.codigo}"></i></td>
+                            <td>
+                                <a th:href="@{http://localhost:8080/turma/excluirAluno?(codigoTurma=${codigo},codigoAluno=${aluno.codigo})}">
+                                    <i class="fas fa-times" th:value="${aluno.codigo}"></i>
+                                </a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

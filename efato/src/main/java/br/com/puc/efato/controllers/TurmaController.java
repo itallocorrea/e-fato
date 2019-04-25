@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -92,16 +93,20 @@ public class TurmaController {
     }
 
     @RequestMapping(value = "/excluirAluno", method = RequestMethod.GET)
-    public ModelAndView excluirAluno(@RequestParam(required = true) long codigoTurma, @RequestParam(required = true) long codigoAluno){
-        ModelAndView modelAndView = new ModelAndView("adicionarAlunos");
-        Turma turma;
-        try{
+    public ModelAndView excluirAluno(@RequestParam long codigoTurma, @RequestParam long codigoAluno){
 
-        }catch (Exception e){
-            e.printStackTrace();
-            modelAndView.addObject("feedbackErro",e.getMessage());
+        Turma turma = turmaRepository.findByCodigo(codigoTurma);
+        List<Aluno> alunos = turma.getAlunos();
+        Aluno alunoToRemove = new Aluno();
+        for(Aluno aluno : alunos){
+            if(aluno.getCodigo() == codigoAluno)
+                alunoToRemove = aluno;
         }
-        return modelAndView;
+        alunos.remove(alunoToRemove);
+
+        turmaRepository.save(turma);
+
+        return new ModelAndView("adicionarAlunos");
     }
 
     @RequestMapping(value = "/minhasTurmas", method = RequestMethod.GET)
