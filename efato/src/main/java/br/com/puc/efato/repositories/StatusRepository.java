@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StatusRepository extends CrudRepository<Status, String>  {
     Status findByCodigo(long codigo_status);
+    Status findByDescricao(String descricao);
 }

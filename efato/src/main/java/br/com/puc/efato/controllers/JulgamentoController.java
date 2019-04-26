@@ -37,13 +37,17 @@ public class JulgamentoController {
 
 
     @RequestMapping(value = "/visualizar", method = RequestMethod.GET)
-    public ModelAndView visualizar(long turma_codigo){
+    public ModelAndView visualizar(long turma_codigo, @RequestParam(required = false) String status){
         ModelAndView modelAndView = new ModelAndView("visualizarJulgamentos");
         modelAndView.addObject("turma",turmaRepository.findByCodigo(turma_codigo));
+        long status_codigo = statusRepository.findByDescricao("Em preparação").getCodigo();
 
         List<JF> jfs = jfRepository.findByFilterTurma(turma_codigo);
         if(!jfs.isEmpty())
-            modelAndView.addObject("jfs",jfRepository.findByFilterTurma(turma_codigo));
+            if("P".equals(status))
+                modelAndView.addObject("jfs",jfRepository.findByFilterTurmaAndStatus(turma_codigo,status_codigo));
+            else
+                modelAndView.addObject("jfs",jfRepository.findByFilterTurma(turma_codigo));
         else
             modelAndView.addObject("feedbackErro","Nada para exibir");
 

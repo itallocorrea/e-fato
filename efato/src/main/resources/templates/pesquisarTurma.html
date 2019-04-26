@@ -60,7 +60,7 @@
     <table class="table table-bordered">
         <thead>
         <tr class="botoes-label">
-            <td colspan="4">
+            <td colspan="5">
                 <!-- feedback -->
                 <span class="feedbackOk" th:text="${feedbackOk}" ></span>
                 <span class="feedbackErro" th:text="${feedbackErro}" ></span>
@@ -77,6 +77,7 @@
             <th scope="col">Curso</th>
             <th scope="col">Unidade</th>
             <th scope="col">JF</th>
+            <th scope="col">Excluir</th>
         </tr>
         </thead>
         <tbody>
@@ -88,6 +89,11 @@
             <td>
                 <a th:href="@{http://localhost:8080/jf/visualizar(turma_codigo=${turma.codigo})}">
                     <i class="fas fa-search" title="Visualizar julgamentos"></i>
+                </a>
+            </td>
+            <td>
+                <a th:href="@{http://localhost:8080/turma/excluir(codigoTurma=${turma.codigo})}">
+                    <i class="fas fa-times" title="Excluir Turma"></i>
                 </a>
             </td>
         </tr>

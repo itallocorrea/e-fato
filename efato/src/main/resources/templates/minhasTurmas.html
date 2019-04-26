@@ -55,7 +55,11 @@
                             <td th:text="${turma.descricaoDisciplina}" ></td>
                             <td th:text="${turma.descricaoCurso}" ></td>
                             <td th:text="${turma.descricaoUnidade}" ></td>
-                            <td><i class="fas fa-search" title="Visualizar julgamentos"></i></td>
+                            <td>
+                                <a th:href="@{http://localhost:8080/jf/visualizar(turma_codigo=${turma.codigo},status=P)}">
+                                    <i class="fas fa-search" title="Visualizar julgamentos"></i>
+                                </a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

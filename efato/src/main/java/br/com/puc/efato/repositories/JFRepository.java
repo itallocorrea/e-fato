@@ -16,6 +16,9 @@ public interface JFRepository extends CrudRepository<JF, String>  {
     @Query("SELECT j FROM jf j WHERE turma_codigo = ?1 ")
     List<JF> findByFilterTurma(long turma_codigo);
 
+    @Query("SELECT j FROM jf j WHERE turma_codigo = ?1 and status_codigo = ?2 ")
+    List<JF> findByFilterTurmaAndStatus(long turma_codigo,long status_codigo);
+
     @Transactional
     @Modifying
     void deleteByCodigo(long codigo);

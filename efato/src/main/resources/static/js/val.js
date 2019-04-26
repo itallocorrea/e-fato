@@ -98,5 +98,3 @@ function getParams () {
     });
     return data;
 }
-
-

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -63,6 +63,13 @@ public class TurmaController {
 
     }
 
+    @RequestMapping(value = "/excluir", method = RequestMethod.GET)
+    public RedirectView excluir(@RequestParam long codigoTurma){
+        Turma turma = turmaRepository.findByCodigo(codigoTurma);
+        turmaRepository.delete(turma);
+        return new RedirectView("http://localhost:8080/turma/pesquisarTurma");
+    }
+
     @RequestMapping(value = "/adicionarAluno", method = RequestMethod.POST)
     public ModelAndView adicionarAluno(TurmaRequest turmaRequest){
         ModelAndView modelAndView = new ModelAndView("adicionarAlunos");
@@ -94,19 +101,21 @@ public class TurmaController {
 
     @RequestMapping(value = "/excluirAluno", method = RequestMethod.GET)
     public ModelAndView excluirAluno(@RequestParam long codigoTurma, @RequestParam long codigoAluno){
-
         Turma turma = turmaRepository.findByCodigo(codigoTurma);
-        List<Aluno> alunos = turma.getAlunos();
-        Aluno alunoToRemove = new Aluno();
-        for(Aluno aluno : alunos){
-            if(aluno.getCodigo() == codigoAluno)
-                alunoToRemove = aluno;
-        }
-        alunos.remove(alunoToRemove);
-
+        Aluno aluno = alunosRepository.findByCodigo(codigoAluno);
+        turma.getAlunos().remove(aluno);
         turmaRepository.save(turma);
 
-        return new ModelAndView("adicionarAlunos");
+        ModelAndView modelAndView = new ModelAndView("adicionarAlunos");
+
+        modelAndView.addObject("codigo",turma.getCodigo());
+        modelAndView.addObject("disciplina",turma.getDisciplina().getDescricao());
+        modelAndView.addObject("curso",turma.getCurso().getDescricao());
+        modelAndView.addObject("unidade",turma.getUnidade().getDescricao());
+        modelAndView.addObject("alunos",turmaRepository.findByCodigo(turma.getCodigo()).getAlunos());
+        modelAndView.addObject("feedbackOk",aluno.getNome() +" removido.");
+
+        return modelAndView;
     }
 
     @RequestMapping(value = "/minhasTurmas", method = RequestMethod.GET)
