@@ -12,5 +12,4 @@ public interface AlunosRepository extends CrudRepository<Aluno, String>  {
     Aluno findByNome(String nome);
     Aluno findByCodigo(long codigo);
     List<Aluno> findByNomeContaining(String term);
-
 }

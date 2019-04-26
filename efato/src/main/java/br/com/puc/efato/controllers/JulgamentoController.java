@@ -1,11 +1,17 @@
 package br.com.puc.efato.controllers;
 
-import br.com.puc.efato.models.api.JulgamentoRequest;
-import br.com.puc.efato.models.api.LoginRequest;
-import br.com.puc.efato.models.db.Fato;
-import br.com.puc.efato.models.db.JF;
-import br.com.puc.efato.models.db.Turma;
-import br.com.puc.efato.repositories.*;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_FATOS;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_STATUS;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_TURMA;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_TURMA_CODIGO;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_USUARIO_LOGADO;
+import static br.com.puc.efato.constants.ServiceConstants.FEEDBACK_ERRO;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.stream.Collectors;
+import br.com.puc.efato.models.api.JulgamentoRequest;
+import br.com.puc.efato.models.api.LoginRequest;
+import br.com.puc.efato.models.db.Fato;
+import br.com.puc.efato.models.db.JF;
+import br.com.puc.efato.models.db.Turma;
+import br.com.puc.efato.repositories.DisciplinaRepository;
+import br.com.puc.efato.repositories.FatoRepository;
+import br.com.puc.efato.repositories.JFRepository;
+import br.com.puc.efato.repositories.ProfessorRepository;
+import br.com.puc.efato.repositories.StatusRepository;
+import br.com.puc.efato.repositories.TurmaRepository;
 
 @Controller
 @RequestMapping("/jf")
@@ -24,28 +38,32 @@ public class JulgamentoController {
 
     @Autowired
     private TurmaRepository turmaRepository;
+    
     @Autowired
     private JFRepository jfRepository;
+    
     @Autowired
     private FatoRepository fatoRepository;
+    
     @Autowired
     private DisciplinaRepository disciplinaRepository;
+    
     @Autowired
     private ProfessorRepository professorRepository;
+    
     @Autowired
     private StatusRepository statusRepository;
-
 
     @RequestMapping(value = "/visualizar", method = RequestMethod.GET)
     public ModelAndView visualizar(long turma_codigo){
         ModelAndView modelAndView = new ModelAndView("visualizarJulgamentos");
-        modelAndView.addObject("turma",turmaRepository.findByCodigo(turma_codigo));
+        modelAndView.addObject(ATRIBUTO_TURMA, turmaRepository.findByCodigo(turma_codigo));
 
         List<JF> jfs = jfRepository.findByFilterTurma(turma_codigo);
         if(!jfs.isEmpty())
-            modelAndView.addObject("jfs",jfRepository.findByFilterTurma(turma_codigo));
+            modelAndView.addObject("jfs", jfRepository.findByFilterTurma(turma_codigo));
         else
-            modelAndView.addObject("feedbackErro","Nada para exibir");
+            modelAndView.addObject(FEEDBACK_ERRO, "Nada para exibir");
 
         return modelAndView;
     }
@@ -62,9 +80,9 @@ public class JulgamentoController {
             jf = jfRepository.findByCodigo(jf_codigo);
         }
         modelAndView.addObject("jf",jf);
-        modelAndView.addObject("turma",turma);
-        modelAndView.addObject("fatos",fatoRepository.findByJf(jf));
-        modelAndView.addObject("status",statusRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_TURMA, turma);
+        modelAndView.addObject(ATRIBUTO_FATOS, fatoRepository.findByJf(jf));
+        modelAndView.addObject(ATRIBUTO_STATUS, statusRepository.findAll());
         return modelAndView;
     }
 
@@ -78,12 +96,12 @@ public class JulgamentoController {
         jf.setTempMax(julgamentoRequest.getTempMax());
         jf.setTurma(turma);
         jf.setDisciplina(disciplinaRepository.findByCodigo(turma.getDisciplina().getCodigo()));
-        jf.setProfessor(professorRepository.findByLogin(( (LoginRequest) session.getAttribute("usuarioLogado")).getLogin()));
+        jf.setProfessor(professorRepository.findByLogin(( (LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin()));
         jf.setStatus(statusRepository.findByCodigo(julgamentoRequest.getStatus_codigo()));
         jfRepository.save(jf);
 
         RedirectView redirectView = new RedirectView("http://localhost:8080/jf/visualizar");
-        redirectView.addStaticAttribute("turma_codigo",julgamentoRequest.getTurma_codigo());
+        redirectView.addStaticAttribute(ATRIBUTO_TURMA_CODIGO, julgamentoRequest.getTurma_codigo());
         return redirectView;
     }
 
@@ -105,7 +123,7 @@ public class JulgamentoController {
         jfRepository.deleteByCodigo(jf_codigo);
 
         RedirectView redirectView = new RedirectView("http://localhost:8080/jf/visualizar");
-        redirectView.addStaticAttribute("turma_codigo", jf.getTurma().getCodigo());
+        redirectView.addStaticAttribute(ATRIBUTO_TURMA_CODIGO, jf.getTurma().getCodigo());
         return redirectView;
     }
 

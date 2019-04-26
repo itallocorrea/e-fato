@@ -18,6 +18,5 @@ public interface FatoRepository extends CrudRepository<Fato, String>  {
     @Transactional
     @Modifying
     @Query("DELETE FROM fato f WHERE f.codigo IN (:codigos)")
-    void deleteInIdList(@Param("codigos")
-            List<Long> codigos);
+    void deleteInIdList(@Param("codigos") List<Long> codigos);
 }
