@@ -22,29 +22,40 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_USUARIO_LOGADO;
+import static br.com.puc.efato.constants.ServiceConstants.TIPO_ALUNO;
+import static br.com.puc.efato.constants.ServiceConstants.TIPO_PROFESSOR;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_TIPO;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_USUARIO;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_CURSOS;
+import static br.com.puc.efato.constants.ServiceConstants.FEEDBACK_ERRO;
+
 @Controller
 @RequestMapping("/usuario")
 public class UsuarioController {
 
 	@Autowired
 	private AlunosRepository alunosRepository;
+	
 	@Autowired
 	private ProfessorRepository professorRepository;
+	
 	@Autowired
 	private CursoRepository cursoRepository;
 
 	@RequestMapping(value = "/cadastro", method = RequestMethod.GET)
 	public ModelAndView criar() {
 		ModelAndView modelAndView = new ModelAndView("cadastrarUsuario");
-		modelAndView.addObject("cursos",cursoRepository.findAll());
+		modelAndView.addObject(ATRIBUTO_CURSOS, cursoRepository.findAll());
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/cadastro/finalizar", method = RequestMethod.POST)
 	public RedirectView criarUsuario(UsuarioRequest usuarioRequest, HttpSession session){
 		RedirectView redirectView = null;
+		
 		try{
-			if("A".equals(usuarioRequest.getTipo())){
+			if(TIPO_ALUNO.equals(usuarioRequest.getTipo())){
 				Aluno aluno = new Aluno(usuarioRequest);
 				aluno.setCurso(cursoRepository.findByCodigo(usuarioRequest.getCurso()));
 				alunosRepository.save(aluno);
@@ -53,40 +64,46 @@ public class UsuarioController {
 				professorRepository.save(new Professor(usuarioRequest));
 				redirectView = new RedirectView("http://localhost:8080/turma/pesquisarTurma");
 			}
-			session.setAttribute("usuarioLogado",new LoginRequest(usuarioRequest.getLogin(),usuarioRequest.getSenha()));
+			session.setAttribute(ATRIBUTO_USUARIO_LOGADO, new LoginRequest(usuarioRequest.getLogin(),usuarioRequest.getSenha()));
 		}catch (Exception e ){
 			e.printStackTrace();
 		}
+		
 		return redirectView;
 	}
 
 	@RequestMapping(value = "/alteracao", method = RequestMethod.GET)
 	public ModelAndView alterar(HttpSession session){
 		ModelAndView modelAndView = new ModelAndView("alterarUsuario");
+		
 		try{
-			Aluno aluno = alunosRepository.findByLogin( ((LoginRequest) session.getAttribute("usuarioLogado") ).getLogin() );
+			Aluno aluno = alunosRepository.findByLogin(((LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin());
+			
 			if(aluno != null){
-				modelAndView.addObject("usuario",aluno);
-				modelAndView.addObject("tipo","A");
+				modelAndView.addObject(ATRIBUTO_USUARIO,aluno);
+				modelAndView.addObject(ATRIBUTO_TIPO, TIPO_ALUNO);
 			}else{
-				Professor professor = professorRepository.findByLogin(((LoginRequest) session.getAttribute("usuarioLogado") ).getLogin() );
-				modelAndView.addObject("usuario",professor);
-				modelAndView.addObject("tipo","P");
+				Professor professor = professorRepository.findByLogin(((LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin());
+				modelAndView.addObject(ATRIBUTO_USUARIO, professor);
+				modelAndView.addObject(ATRIBUTO_TIPO, TIPO_PROFESSOR);
 			}
-			modelAndView.addObject("cursos",cursoRepository.findAll());
+			
+			modelAndView.addObject(ATRIBUTO_CURSOS, cursoRepository.findAll());
 			return modelAndView;
 		}catch (Exception e ){
 			e.printStackTrace();
-			modelAndView.addObject("feedbackError",e.toString());
+			modelAndView.addObject(FEEDBACK_ERRO, e.toString());
 		}
+		
 		return modelAndView;
 	}
 
 	@RequestMapping(value = "/alteracao/finalizar", method = RequestMethod.POST)
 	public RedirectView alterarUsuario(UsuarioRequest usuarioRequest){
 		RedirectView redirectView = null;
+		
 		try{
-			if("A".equals(usuarioRequest.getTipo())){
+			if(TIPO_ALUNO.equals(usuarioRequest.getTipo())){
 				Aluno aluno = alunosRepository.findByLogin(usuarioRequest.getLogin());
 				aluno.setNome(usuarioRequest.getNome());
 				aluno.setEmail(usuarioRequest.getEmail());
@@ -105,15 +122,19 @@ public class UsuarioController {
 		}catch (Exception e ){
 			e.printStackTrace();
 		}
+		
 		return redirectView;
 	}
 
 	@RequestMapping(value = "/existe", method = RequestMethod.GET,produces = "application/json")
 	@ResponseBody
 	public ResponseEntity<String> usuarioExiste(@RequestParam(required = true) String login) throws JSONException {
-		if(Utils.loginExiste(login,alunosRepository,professorRepository)){
+		if(Utils.loginExiste(login, alunosRepository, professorRepository)) {
 			return new ResponseEntity<>("{\"existe\" : \"true\"}", HttpStatus.OK);
-		}else return new ResponseEntity<>("{\"existe\" : \"false\"}", HttpStatus.OK);
+		 } else {
+			 return new ResponseEntity<>("{\"existe\" : \"false\"}", HttpStatus.OK);
+		 }
 	}
+		
 
 }

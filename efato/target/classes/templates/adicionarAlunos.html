@@ -55,11 +55,11 @@
             <form class="form-signin" action="./adicionarAluno" method="POST">
             <h5 class="tituloSecundario">Adicionar alunos:</h5>
             <div class="input-group">
-                <input type="text" id="buscarAluno" name="aluno_nome" class="form-control" placeholder="Digite o nome do aluno"/>
+                <input type="text" id="buscarAluno" name="aluno_nome" class="form-control" placeholder="Digite o nome do aluno" autofocus/>
                 <input type="hidden" name="codigo" th:value="${codigo}"/>
                 <div class="input-group-append">
                     <button class="btn btn-success" id="adicionarAluno" type="submit">
-                        <i class="fas fa-arrow-down"></i>
+                        <i class="fas fa-search"></i>
                     </button>
                 </div>
             </div>

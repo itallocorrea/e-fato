@@ -11,7 +11,4 @@ public class ProfessorController {
 
 	@Autowired
 	private ProfessorRepository professorRepository;
-
-
-
 }

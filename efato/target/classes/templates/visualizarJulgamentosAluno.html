@@ -48,7 +48,7 @@
                         <tr>
                             <td>Descrição</td>
                             <td>Status</td>
-                            <td>Ação</td>
+                            <td>Visualizar Equipe</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -57,7 +57,7 @@
                             <td th:text="${jf.descricaoStatus}"></td>
                             <td>
                                 <a th:href="@{ http://localhost:8080/jf/cadastro(turma_codigo=${turma.codigo},jf_codigo=${jf.codigo} ) }" title="Visualizar JF">
-                                    <i class="fas fa-pen"></i>
+                                    <i class="fas fa-users"></i>
                                 </a>
                             </td>
                         </tr>

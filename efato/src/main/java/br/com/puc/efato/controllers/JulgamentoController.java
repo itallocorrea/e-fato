@@ -18,39 +18,48 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static br.com.puc.efato.constants.ServiceConstants.*;
+
 @Controller
 @RequestMapping("/jf")
 public class JulgamentoController {
 
     @Autowired
     private TurmaRepository turmaRepository;
+    
     @Autowired
     private JFRepository jfRepository;
+    
     @Autowired
     private FatoRepository fatoRepository;
+    
     @Autowired
     private DisciplinaRepository disciplinaRepository;
+    
     @Autowired
     private ProfessorRepository professorRepository;
+    
     @Autowired
     private StatusRepository statusRepository;
-
 
     @RequestMapping(value = "/visualizar", method = RequestMethod.GET)
     public ModelAndView visualizar(long turma_codigo, @RequestParam(required = false) String status){
         ModelAndView modelAndView = new ModelAndView("visualizarJulgamentos");
-        modelAndView.addObject("turma",turmaRepository.findByCodigo(turma_codigo));
         long status_codigo = statusRepository.findByDescricao("Em preparação").getCodigo();
-
         List<JF> jfs = jfRepository.findByFilterTurma(turma_codigo);
-        if(!jfs.isEmpty())
-            if("P".equals(status))
+        if(!jfs.isEmpty()){
+            if("P".equals(status)){
+                modelAndView = new ModelAndView("visualizarJulgamentosAluno");
                 modelAndView.addObject("jfs",jfRepository.findByFilterTurmaAndStatus(turma_codigo,status_codigo));
-            else
+            }
+            else{
                 modelAndView.addObject("jfs",jfRepository.findByFilterTurma(turma_codigo));
-        else
-            modelAndView.addObject("feedbackErro","Nada para exibir");
+            }
+        }else{
+            modelAndView.addObject(ATRIBUTO_TURMA, turmaRepository.findByCodigo(turma_codigo));
+        }
 
+        modelAndView.addObject("turma",turmaRepository.findByCodigo(turma_codigo));
         return modelAndView;
     }
 
@@ -66,9 +75,9 @@ public class JulgamentoController {
             jf = jfRepository.findByCodigo(jf_codigo);
         }
         modelAndView.addObject("jf",jf);
-        modelAndView.addObject("turma",turma);
-        modelAndView.addObject("fatos",fatoRepository.findByJf(jf));
-        modelAndView.addObject("status",statusRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_TURMA, turma);
+        modelAndView.addObject(ATRIBUTO_FATOS, fatoRepository.findByJf(jf));
+        modelAndView.addObject(ATRIBUTO_STATUS, statusRepository.findAll());
         return modelAndView;
     }
 
@@ -82,12 +91,12 @@ public class JulgamentoController {
         jf.setTempMax(julgamentoRequest.getTempMax());
         jf.setTurma(turma);
         jf.setDisciplina(disciplinaRepository.findByCodigo(turma.getDisciplina().getCodigo()));
-        jf.setProfessor(professorRepository.findByLogin(( (LoginRequest) session.getAttribute("usuarioLogado")).getLogin()));
+        jf.setProfessor(professorRepository.findByLogin(( (LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin()));
         jf.setStatus(statusRepository.findByCodigo(julgamentoRequest.getStatus_codigo()));
         jfRepository.save(jf);
 
         RedirectView redirectView = new RedirectView("http://localhost:8080/jf/visualizar");
-        redirectView.addStaticAttribute("turma_codigo",julgamentoRequest.getTurma_codigo());
+        redirectView.addStaticAttribute(ATRIBUTO_TURMA_CODIGO, julgamentoRequest.getTurma_codigo());
         return redirectView;
     }
 
@@ -109,7 +118,7 @@ public class JulgamentoController {
         jfRepository.deleteByCodigo(jf_codigo);
 
         RedirectView redirectView = new RedirectView("http://localhost:8080/jf/visualizar");
-        redirectView.addStaticAttribute("turma_codigo", jf.getTurma().getCodigo());
+        redirectView.addStaticAttribute(ATRIBUTO_TURMA_CODIGO, jf.getTurma().getCodigo());
         return redirectView;
     }
 

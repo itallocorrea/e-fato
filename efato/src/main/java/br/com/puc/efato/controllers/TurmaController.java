@@ -17,50 +17,55 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import static br.com.puc.efato.constants.ServiceConstants.*;
+
 @Controller
 @RequestMapping("/turma")
 public class TurmaController {
 
     @Autowired
     private TurmaRepository turmaRepository;
+    
     @Autowired
     private AlunosRepository alunosRepository;
+    
     @Autowired
     private DisciplinaRepository disciplinaRepository;
+    
     @Autowired
     private CursoRepository cursoRepository;
+    
     @Autowired
     private UnidadeRepository unidadeRepository;
-
 
     @RequestMapping(value = "/cadastro", method = RequestMethod.GET)
     public ModelAndView criar(){
         ModelAndView modelAndView = new ModelAndView("cadastrarTurma");
-        modelAndView.addObject("disciplinas",disciplinaRepository.findAll());
-        modelAndView.addObject("cursos",cursoRepository.findAll());
-        modelAndView.addObject("unidades",unidadeRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_DISCIPLINAS, disciplinaRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_CURSOS, cursoRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_UNIDADES, unidadeRepository.findAll());
         return modelAndView;
     }
 
-    @RequestMapping(value = "/cadastrar", method = RequestMethod.POST)
+	@RequestMapping(value = "/cadastrar", method = RequestMethod.POST)
     public ModelAndView cadastrarTurma(TurmaRequest turmaRequest){
         ModelAndView modelAndView = new ModelAndView("adicionarAlunos");
         Turma turma = new Turma();
+        
         try{
             turma.setCurso(cursoRepository.findByCodigo(turmaRequest.getCurso_codigo()));
             turma.setDisciplina(disciplinaRepository.findByCodigo(turmaRequest.getDisciplina_codigo()));
             turma.setUnidade(unidadeRepository.findByCodigo(turmaRequest.getUnidade_codigo()));
             turmaRepository.save(turma);
-            modelAndView.addObject("codigo",turma.getCodigo());
-            modelAndView.addObject("disciplina",turma.getDisciplina().getDescricao());
-            modelAndView.addObject("curso",turma.getCurso().getDescricao());
-            modelAndView.addObject("unidade",turma.getUnidade().getDescricao());
+            modelAndView.addObject(ATRIBUTO_CODIGO, turma.getCodigo());
+            modelAndView.addObject(ATRIBUTO_DISCIPLINA, turma.getDisciplina().getDescricao());
+            modelAndView.addObject(ATRIBUTO_CURSO, turma.getCurso().getDescricao());
+            modelAndView.addObject(ATRIBUTO_UNIDADE, turma.getUnidade().getDescricao());
         }catch (Exception e){
             e.printStackTrace();
-        }finally {
-            return modelAndView;
         }
-
+        
+        	return modelAndView;
     }
 
     @RequestMapping(value = "/excluir", method = RequestMethod.GET)
@@ -74,28 +79,30 @@ public class TurmaController {
     public ModelAndView adicionarAluno(TurmaRequest turmaRequest){
         ModelAndView modelAndView = new ModelAndView("adicionarAlunos");
         Turma turma;
+        
         try{
             turma = turmaRepository.findByCodigo(turmaRequest.getCodigo());
-            modelAndView.addObject("codigo",turma.getCodigo());
-            modelAndView.addObject("disciplina",turma.getDisciplina().getDescricao());
-            modelAndView.addObject("curso",turma.getCurso().getDescricao());
-            modelAndView.addObject("unidade",turma.getUnidade().getDescricao());
+            modelAndView.addObject(ATRIBUTO_CODIGO, turma.getCodigo());
+            modelAndView.addObject(ATRIBUTO_DISCIPLINA, turma.getDisciplina().getDescricao());
+            modelAndView.addObject(ATRIBUTO_CURSO, turma.getCurso().getDescricao());
+            modelAndView.addObject(ATRIBUTO_UNIDADE, turma.getUnidade().getDescricao());
 
             Aluno aluno = alunosRepository.findByNome(turmaRequest.getAluno_nome());
             if(aluno != null){
                 turma.setAlunos(aluno);
-                modelAndView.addObject("alunos",turmaRepository.findByCodigo(turma.getCodigo()).getAlunos());
-                modelAndView.addObject("feedbackOk",turmaRequest.getAluno_nome() +" adicionado.");
+                modelAndView.addObject(ATRIBUTO_ALUNOS, turmaRepository.findByCodigo(turma.getCodigo()).getAlunos());
+                modelAndView.addObject(FEEDBACK_OK, turmaRequest.getAluno_nome() +" adicionado.");
                 turmaRepository.save(turma);
             }else{
-                modelAndView.addObject("alunos",turmaRepository.findByCodigo(turma.getCodigo()).getAlunos());
-                modelAndView.addObject("feedbackErro",turmaRequest.getAluno_nome() +" não encontrado.");
+                modelAndView.addObject(ATRIBUTO_ALUNOS, turmaRepository.findByCodigo(turma.getCodigo()).getAlunos());
+                modelAndView.addObject(FEEDBACK_ERRO, turmaRequest.getAluno_nome() +" não encontrado.");
             }
 
         }catch (Exception e){
             e.printStackTrace();
-            modelAndView.addObject("feedbackErro",e.getMessage());
+            modelAndView.addObject(FEEDBACK_ERRO, e.getMessage());
         }
+        
         return modelAndView;
     }
 
@@ -121,14 +128,14 @@ public class TurmaController {
     @RequestMapping(value = "/minhasTurmas", method = RequestMethod.GET)
     public ModelAndView minhasTurmas(HttpSession session){
         ArrayList<Turma> retorno = new ArrayList<>();
-        Aluno aluno = alunosRepository.findByLogin( ((LoginRequest) session.getAttribute("usuarioLogado")).getLogin() );
+        Aluno aluno = alunosRepository.findByLogin( ((LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin() );
         //todo: melhor busca no banco de dados
         for(Turma turma : turmaRepository.findAll()) {
             if (turma.getAlunos().contains(alunosRepository.findByLogin(aluno.getLogin()))) {
                 retorno.add(turma);
             }
         }
-        return new ModelAndView("minhasTurmas").addObject("turmas",retorno);
+        return new ModelAndView("minhasTurmas").addObject(ATRIBUTO_TURMAS,retorno);
     }
 
     @RequestMapping(value = "/pesquisarTurma", method = RequestMethod.GET)
@@ -136,16 +143,16 @@ public class TurmaController {
                                         @RequestParam(required = false) String curso_codigo,
                                         @RequestParam(required = false) String unidade_codigo){
         ModelAndView modelAndView = new ModelAndView("pesquisarTurma");
-        modelAndView.addObject("disciplinas",disciplinaRepository.findAll());
-        modelAndView.addObject("cursos",cursoRepository.findAll());
-        modelAndView.addObject("unidades",unidadeRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_DISCIPLINAS, disciplinaRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_CURSOS, cursoRepository.findAll());
+        modelAndView.addObject(ATRIBUTO_UNIDADES, unidadeRepository.findAll());
 
-        if((disciplina_codigo != null  || curso_codigo != null || unidade_codigo != null) && (!Objects.equals(disciplina_codigo, "0") || !Objects.equals(curso_codigo, "0") || !Objects.equals(unidade_codigo, "0"))){
-            modelAndView.addObject("turmas",turmaRepository.findByFilter(disciplina_codigo,curso_codigo,unidade_codigo));
-            modelAndView.addObject("feedbackOk","Filtro aplicado.");
+        if((disciplina_codigo != null  || curso_codigo != null || unidade_codigo != null) && (!Objects.equals(disciplina_codigo, ZERO) || !Objects.equals(curso_codigo, ZERO) || !Objects.equals(unidade_codigo, ZERO))){
+            modelAndView.addObject(ATRIBUTO_TURMAS, turmaRepository.findByFilter(disciplina_codigo,curso_codigo,unidade_codigo));
+            modelAndView.addObject(FEEDBACK_OK,"Filtro aplicado.");
         }else {
-            modelAndView.addObject("turmas", turmaRepository.findAll());
-            modelAndView.addObject("feedbackOk", "Visualizando todas.");
+            modelAndView.addObject(ATRIBUTO_TURMAS, turmaRepository.findAll());
+            modelAndView.addObject(FEEDBACK_OK, "Visualizando todas.");
         }
         return modelAndView;
     }
