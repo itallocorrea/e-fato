@@ -1,11 +1,17 @@
 package br.com.puc.efato.controllers;
 
-import br.com.puc.efato.models.api.JulgamentoRequest;
-import br.com.puc.efato.models.api.LoginRequest;
-import br.com.puc.efato.models.db.Fato;
-import br.com.puc.efato.models.db.JF;
-import br.com.puc.efato.models.db.Turma;
-import br.com.puc.efato.repositories.*;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_FATOS;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_STATUS;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_TURMA;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_TURMA_CODIGO;
+import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_USUARIO_LOGADO;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +20,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static br.com.puc.efato.constants.ServiceConstants.*;
+import br.com.puc.efato.models.api.JulgamentoRequest;
+import br.com.puc.efato.models.api.LoginRequest;
+import br.com.puc.efato.models.db.Equipe;
+import br.com.puc.efato.models.db.Fato;
+import br.com.puc.efato.models.db.JF;
+import br.com.puc.efato.models.db.Turma;
+import br.com.puc.efato.repositories.AlunosRepository;
+import br.com.puc.efato.repositories.DisciplinaRepository;
+import br.com.puc.efato.repositories.EquipeRepository;
+import br.com.puc.efato.repositories.FatoRepository;
+import br.com.puc.efato.repositories.JFRepository;
+import br.com.puc.efato.repositories.ProfessorRepository;
+import br.com.puc.efato.repositories.StatusRepository;
+import br.com.puc.efato.repositories.TurmaRepository;
 
 @Controller
 @RequestMapping("/jf")
@@ -28,10 +43,16 @@ public class JulgamentoController {
     private TurmaRepository turmaRepository;
     
     @Autowired
+    private EquipeRepository equipeRepository;
+    
+    @Autowired
     private JFRepository jfRepository;
     
     @Autowired
     private FatoRepository fatoRepository;
+    
+    @Autowired
+    private AlunosRepository alunoRepository;
     
     @Autowired
     private DisciplinaRepository disciplinaRepository;
@@ -59,7 +80,7 @@ public class JulgamentoController {
             modelAndView.addObject(ATRIBUTO_TURMA, turmaRepository.findByCodigo(turma_codigo));
         }
 
-        modelAndView.addObject("turma",turmaRepository.findByCodigo(turma_codigo));
+        modelAndView.addObject(ATRIBUTO_TURMA,turmaRepository.findByCodigo(turma_codigo));
         return modelAndView;
     }
 
@@ -91,7 +112,7 @@ public class JulgamentoController {
         jf.setTempMax(julgamentoRequest.getTempMax());
         jf.setTurma(turma);
         jf.setDisciplina(disciplinaRepository.findByCodigo(turma.getDisciplina().getCodigo()));
-        jf.setProfessor(professorRepository.findByLogin(( (LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin()));
+        jf.setProfessor(professorRepository.findByLogin(((LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin()));
         jf.setStatus(statusRepository.findByCodigo(julgamentoRequest.getStatus_codigo()));
         jfRepository.save(jf);
 
@@ -121,6 +142,69 @@ public class JulgamentoController {
         redirectView.addStaticAttribute(ATRIBUTO_TURMA_CODIGO, jf.getTurma().getCodigo());
         return redirectView;
     }
+    
+    //Método verifica se o aluno logado está incluso ou não em uma equipe. Dependendo do resultado, ele é redirecionado para a devida página.
+    @RequestMapping(value = "/hasEquipe", method = RequestMethod.GET)
+    public ModelAndView alunoHasEquipe(@RequestParam long jf_codigo, @RequestParam long aluno_codigo){
+    	ModelAndView modelAndView = new ModelAndView("tela sem equipe");
+    	
+        List<Equipe> equipesJF = equipeRepository.findByJf(jfRepository.findByCodigo(jf_codigo));
+        
+        for(Equipe equipe : equipesJF) {
+        	if(equipe.getAlunoLider().getCodigo() == aluno_codigo || equipe.getAlunos().contains(alunoRepository.findByCodigo(aluno_codigo))) {
+        		modelAndView.addObject("alunoLider", equipe.getAlunoLider());
+        		modelAndView.addObject("membros", equipe.getAlunos());
+        		modelAndView = new ModelAndView("tela com equipe");
+        	}
+        }
 
+        return modelAndView;
+    }
 
+   //Método cria uma equipe
+    @RequestMapping(value = "/criarEquipe", method = RequestMethod.GET)
+    public ModelAndView criarEquipe(@RequestParam long jf_codigo, @RequestParam long aluno_codigo, @RequestParam long turma_codigo){
+    	Equipe equipe = new Equipe();
+        equipe.setAlunoLider(alunoRepository.findByCodigo(aluno_codigo));
+        equipe.setAlunos(new ArrayList<>());
+        equipeRepository.save(equipe);
+        
+        ModelAndView modelAndView = new ModelAndView("tela de visualizar julgamento de fatos");
+        modelAndView.addObject("jfs", jfRepository.findByFilterTurma(turma_codigo));
+        modelAndView.addObject("turma", turmaRepository.findByCodigo(turma_codigo));
+
+        return modelAndView;
+    }
+    
+  //Método adiciona membro em uma equipe
+    @RequestMapping(value = "/adicionarMembro", method = RequestMethod.GET)
+    public ModelAndView adicionarMembro(@RequestParam long codigo_equipe, @RequestParam long codigo_membro){
+    	Equipe equipe = equipeRepository.findByCodigo(codigo_equipe);
+    	equipe.getAlunos().add(alunoRepository.findByCodigo(codigo_membro));
+    	equipeRepository.save(equipe);
+    	
+    	ModelAndView modelAndView = new ModelAndView("retorna a mesma tela, porém com o aluno adicionado");
+    	modelAndView.addObject("membros", equipe.getAlunos());
+    	modelAndView.addObject("alunoLider", equipe.getAlunoLider());
+
+        return modelAndView;
+    }
+    
+  //Método onde um aluno sai da equipe. Caso ele seja líder, a equipe é excluída.
+    @RequestMapping(value = "/sairEquipe", method = RequestMethod.GET)
+    public ModelAndView sairEquipe(@RequestParam long codigo_equipe, @RequestParam long codigo_aluno, @RequestParam long codigo_turma){
+    	Equipe equipe = equipeRepository.findByCodigo(codigo_equipe);
+    	
+    	if(equipe.getAlunoLider().getCodigo() == codigo_aluno) {
+    		equipeRepository.delete(equipe);
+    	} else {
+    		equipe.getAlunos().remove(alunoRepository.findByCodigo(codigo_aluno));
+    	}
+    	
+    	ModelAndView modelAndView = new ModelAndView("retorna a tela de julgamento de fatos");
+    	 modelAndView.addObject("jfs", jfRepository.findByFilterTurma(codigo_turma));
+         modelAndView.addObject("turma", turmaRepository.findByCodigo(codigo_turma));
+
+        return modelAndView;
+    }
 }
