@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>eFato - Pesquisar Turma</title>
+    <title>eFato - Julgamentos Alunos</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://localhost:8080/css/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
@@ -56,15 +56,68 @@
                             <td th:text="${jf.descricao}" ></td>
                             <td th:text="${jf.descricaoStatus}"></td>
                             <td>
-                                <a th:href="@{ http://localhost:8080/jf/cadastro(turma_codigo=${turma.codigo},jf_codigo=${jf.codigo} ) }" title="Visualizar JF">
+                                <a th:href="@{ http://localhost:8080/jf/hasEquipe(codigoJF=${jf.codigo} ) }" title="Visualizar JF">
                                     <i class="fas fa-users"></i>
                                 </a>
                             </td>
                         </tr>
                         </tbody>
                     </table>
-
             </div>
+            <input type="hidden" id="modal" th:value="${modal}">
+
+            <!--modal #modalSemEquipe-->
+            <div class="modal" role="dialog" id="modalSemEquipe">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sua equipe</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Você não está em nenhuma equipe.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success ">Criar equipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--modal #modalComEquipe-->
+            <div class="modal" role="dialog" id="modalComEquipe">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sua equipe</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>577764 - Gabriel da Silva Colen </td>
+                                </tr>
+                                <tr>
+                                    <td>577765 - Geraldo Ângelo Nazareno <span class="lider"><i class="fas fa-crown"></i></span></td>
+                                </tr>
+                                <tr>
+                                    <td>577766 - João Felipe do Nascimento Nogueira</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success "><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -74,5 +127,5 @@
 <!-- rodape -->
 <div class="rodape container-fluid"></div>
 </body>
-
+<script src="http://localhost:8080/js/val.js"></script>
 </html>

@@ -98,3 +98,12 @@ function getParams () {
     });
     return data;
 }
+
+
+//controle de modal julgamento aluno
+$(document).ready(function(){
+    let controleModal =  document.getElementById('modal');
+    if(controleModal){
+        $('#'+controleModal.value).modal('show');
+    }
+});
