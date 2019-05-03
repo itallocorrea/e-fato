@@ -86,7 +86,7 @@ function adicionarAluno () {
 }
 
 // get params da URI
-function getParams () {
+function getParams() {
     let query = location.search.slice(1);
     let partes = query.split('&');
     let data = {};
@@ -98,3 +98,13 @@ function getParams () {
     });
     return data;
 }
+
+
+//controle de modal julgamento aluno
+$(document).ready(function(){
+    let controleModal =  document.getElementById('modal');
+    if(controleModal){
+        $('#'+controleModal.value).dialog();
+    }
+});
+

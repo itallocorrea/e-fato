@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://localhost:8080/css/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
     <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
     <script src="http://localhost:8080/js/popper.min.js"></script>
@@ -56,7 +57,7 @@
                             <td th:text="${jf.descricao}" ></td>
                             <td th:text="${jf.descricaoStatus}"></td>
                             <td>
-                                <a th:href="@{ http://localhost:8080/jf/hasEquipe(codigoJF=${jf.codigo} ) }" title="Visualizar JF">
+                                <a th:href="@{ http://localhost:8080/jf/hasEquipe(jf_codigo=${jf.codigo} ) }" title="Visualizar JF">
                                     <i class="fas fa-users"></i>
                                 </a>
                             </td>
@@ -65,25 +66,39 @@
                     </table>
             </div>
             <input type="hidden" id="modal" th:value="${modal}">
-
             <!--modal #modalSemEquipe-->
-            <div class="modal" role="dialog" id="modalSemEquipe">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Sua equipe</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+            <div class="modal" role="dialog" id="modalSemEquipe" title="Adicionar equipe">
+                <p>Você não está em nenhuma equipe.</p>
+                <form class="form-signin" action="./adicionarAluno" method="POST">
+                    <h5 class="tituloSecundario">Adicionar alunos:</h5>
+                    <div class="input-group">
+                        <input type="text" id="buscarAluno" name="aluno_nome" class="form-control" placeholder="Digite o nome do aluno" autofocus/>
+                        <input type="hidden" name="codigo" th:value="${codigo}"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-success" id="adicionarAluno" type="submit">
+                                <i class="fas fa-search"></i>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <p>Você não está em nenhuma equipe.</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-success ">Criar equipe</button>
-                        </div>
                     </div>
-                </div>
+
+                    <br>
+                    <span class="feedbackErro" th:text="${feedbackErro}" ></span>
+                    <span class="feedbackOk" th:text="${feedbackOk}" ></span>
+
+                    <h5 class="tituloSecundario">Alunos adicionados:</h5>
+                    <table class="table">
+                        <tbody>
+                        <tr th:each="aluno : ${alunos}">
+                            <td th:value="${aluno.codigo}" th:text="${aluno.nome}"></td>
+                            <td>
+                                <a th:href="@{http://localhost:8080/turma/excluirAluno?(codigoTurma=${codigo},codigoAluno=${aluno.codigo})}">
+                                    <i class="fas fa-times" th:value="${aluno.codigo}"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
             </div>
 
             <!--modal #modalComEquipe-->
@@ -99,14 +114,9 @@
                         <div class="modal-body">
                             <table class="table">
                                 <tbody>
-                                <tr>
-                                    <td>577764 - Gabriel da Silva Colen </td>
-                                </tr>
-                                <tr>
-                                    <td>577765 - Geraldo Ângelo Nazareno <span class="lider"><i class="fas fa-crown"></i></span></td>
-                                </tr>
-                                <tr>
-                                    <td>577766 - João Felipe do Nascimento Nogueira</td>
+
+                                <tr th:each="membro : ${membros}">
+                                    <td  th:if="${membro != null}" th:text="${membro.codigo} + ' - ' + ${membro.nome}" >577764 - Guilherme Alves </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -127,5 +137,12 @@
 <!-- rodape -->
 <div class="rodape container-fluid"></div>
 </body>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="http://localhost:8080/js/val.js"></script>
+<script>$ ('#buscarAluno').autocomplete ({source :  'http://localhost:8080/aluno/buscar'});</script>
+<script>
+    document.getElementById('criarEquipe').href += '=' + getParams().jf_codigo;
+</script>
+
 </html>

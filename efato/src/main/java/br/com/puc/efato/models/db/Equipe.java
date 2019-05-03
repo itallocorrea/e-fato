@@ -1,15 +1,7 @@
 package br.com.puc.efato.models.db;
 
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 @Entity(name = "equipe")
 public class Equipe {
@@ -30,6 +22,8 @@ public class Equipe {
             joinColumns = @JoinColumn(name = "Equipe_codigo"),
             inverseJoinColumns = @JoinColumn(name = "Aluno_codigo")
     )
+
+
     private List<Aluno> alunos;
 
 	public long getCodigo() {
