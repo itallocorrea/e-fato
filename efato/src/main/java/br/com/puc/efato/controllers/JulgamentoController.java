@@ -2,6 +2,7 @@ package br.com.puc.efato.controllers;
 
 import br.com.puc.efato.models.api.JulgamentoRequest;
 import br.com.puc.efato.models.api.LoginRequest;
+import br.com.puc.efato.models.api.MembrosRequest;
 import br.com.puc.efato.models.db.*;
 import br.com.puc.efato.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class JulgamentoController {
     
     @Autowired
     private StatusRepository statusRepository;
+
+    @Autowired
+    private AlunosRepository alunosRepository;
 
     @RequestMapping(value = "/visualizar", method = RequestMethod.GET)
     public ModelAndView visualizar(long turma_codigo, @RequestParam(required = false) String status){
@@ -158,43 +162,67 @@ public class JulgamentoController {
         equipe.setAlunos(new ArrayList<>());
         equipeRepository.save(equipe);
         
-        ModelAndView modelAndView = new ModelAndView("visualizarJulgamentosAluno");
-        modelAndView.addObject("jfs", jfRepository.findByFilterTurma(turma_codigo));
+        ModelAndView modelAndView = new ModelAndView("adicionarMembros");
         modelAndView.addObject("turma", turmaRepository.findByCodigo(turma_codigo));
+        modelAndView.addObject("equipe",equipe.getCodigo());
+        modelAndView.addObject("jf_codigo",jf_codigo);
 
         return modelAndView;
     }
     
   //Método adiciona membro em uma equipe
-    @RequestMapping(value = "/adicionarMembro", method = RequestMethod.GET)
-    public ModelAndView adicionarMembro(@RequestParam long codigo_equipe, @RequestParam long codigo_membro){
-    	Equipe equipe = equipeRepository.findByCodigo(codigo_equipe);
-    	equipe.getAlunos().add(alunoRepository.findByCodigo(codigo_membro));
-    	equipeRepository.save(equipe);
-    	
-    	ModelAndView modelAndView = new ModelAndView("retorna a mesma tela, porém com o aluno adicionado");
-    	modelAndView.addObject("membros", equipe.getAlunos());
-    	modelAndView.addObject("alunoLider", equipe.getAlunoLider());
+    @RequestMapping(value = "/adicionarMembro", method = RequestMethod.POST)
+    public ModelAndView adicionarMembro(MembrosRequest membrosRequest){
+        ModelAndView modelAndView = new ModelAndView("adicionarMembros");
 
+        if(membrosRequest != null){
+            Equipe equipe = equipeRepository.findByCodigo(membrosRequest.getCodigo_equipe());
+            Aluno aluno = alunoRepository.findByNome(membrosRequest.getAluno_nome());
+            if(aluno != null){
+                equipe.getAlunos().add(aluno);
+                equipeRepository.save(equipe);
+            }else{
+                modelAndView.addObject("feedbackErro","Aluno não localizado. Tente novamente.");
+            }
+            modelAndView.addObject("equipe",equipe.getCodigo());
+            modelAndView.addObject("jf_codigo",equipe.getJf().getCodigo());
+            modelAndView.addObject("membros", equipe.getAlunos());
+            modelAndView.addObject("turma",turmaRepository.findByCodigo(equipe.getJf().getTurma().getCodigo()));
+            modelAndView.addObject("alunoLider", equipe.getAlunoLider());
+        }
+        return modelAndView;
+    }
+
+
+    @RequestMapping(value = "/excluirAluno", method = RequestMethod.GET)
+    public ModelAndView excluirAluno(@RequestParam long codigoEquipe, @RequestParam long codigoAluno){
+        Equipe equipe = equipeRepository.findByCodigo(codigoEquipe);
+        Aluno aluno = alunosRepository.findByCodigo(codigoAluno);
+        equipe.getAlunos().remove(aluno);
+        equipeRepository.save(equipe);
+
+        ModelAndView modelAndView = new ModelAndView("adicionarMembros");
+        modelAndView.addObject("turma", equipe.getJf().getTurma());
+        modelAndView.addObject("equipe",equipe.getCodigo());
+        modelAndView.addObject("jf_codigo",equipe.getJf().getCodigo());
+        modelAndView.addObject("membros", equipe.getAlunos());
         return modelAndView;
     }
     
   //Método onde um aluno sai da equipe. Caso ele seja líder, a equipe é excluída.
     @RequestMapping(value = "/sairEquipe", method = RequestMethod.GET)
-    public ModelAndView sairEquipe(@RequestParam long codigo_equipe, @RequestParam long codigo_aluno, @RequestParam long codigo_turma){
+    public RedirectView sairEquipe(@RequestParam long codigo_equipe, HttpSession session){
     	Equipe equipe = equipeRepository.findByCodigo(codigo_equipe);
-    	
-    	if(equipe.getAlunoLider().getCodigo() == codigo_aluno) {
+        Aluno aluno = getAlunoLogado(session);
+    	if(equipe.getAlunoLider().getCodigo() == aluno.getCodigo()) {
     		equipeRepository.delete(equipe);
     	} else {
-    		equipe.getAlunos().remove(alunoRepository.findByCodigo(codigo_aluno));
+    		equipe.getAlunos().remove(alunoRepository.findByCodigo(aluno.getCodigo()));
     	}
     	
-    	ModelAndView modelAndView = new ModelAndView("retorna a tela de julgamento de fatos");
-    	 modelAndView.addObject("jfs", jfRepository.findByFilterTurma(codigo_turma));
-         modelAndView.addObject("turma", turmaRepository.findByCodigo(codigo_turma));
-
-        return modelAndView;
+    	RedirectView redirectView = new RedirectView("http://localhost:8080/jf/visualizar");
+    	redirectView.addStaticAttribute("turma_codigo",equipe.getJf().getTurma().getCodigo());
+        return redirectView;
     }
 
 

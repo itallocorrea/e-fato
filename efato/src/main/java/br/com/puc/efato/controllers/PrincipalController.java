@@ -1,11 +1,9 @@
 package br.com.puc.efato.controllers;
 
-import static br.com.puc.efato.constants.ServiceConstants.ATRIBUTO_USUARIO_LOGADO;
-import static br.com.puc.efato.constants.ServiceConstants.FEEDBACK_ERRO;
-import static br.com.puc.efato.constants.ServiceConstants.TIPO_ALUNO;
-
-import javax.servlet.http.HttpSession;
-
+import br.com.puc.efato.models.api.LoginRequest;
+import br.com.puc.efato.repositories.AlunosRepository;
+import br.com.puc.efato.repositories.ProfessorRepository;
+import br.com.puc.efato.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
-import br.com.puc.efato.models.api.LoginRequest;
-import br.com.puc.efato.repositories.AlunosRepository;
-import br.com.puc.efato.repositories.ProfessorRepository;
-import br.com.puc.efato.utils.Utils;
+import javax.servlet.http.HttpSession;
+
+import static br.com.puc.efato.constants.ServiceConstants.*;
 
 @Controller
 @RequestMapping("/")
@@ -55,5 +52,13 @@ public class PrincipalController {
         session.setAttribute(ATRIBUTO_USUARIO_LOGADO, null);
         return new RedirectView("/");
     }
+
+    @RequestMapping(value = "/error", method = RequestMethod.GET)
+    public ModelAndView erro(){
+        return new ModelAndView("erro");
+    }
+
+
+
 
 }

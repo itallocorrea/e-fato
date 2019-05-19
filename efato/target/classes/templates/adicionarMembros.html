@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Adicionar Membros</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<div class="voltar">
+    <a href="#" onclick="window.history.back();" title="Voltar">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+</div>
+<!-- cabecalho -->
+<div class="cabecalho container">
+    <h4 class="tituloPrincipal" th:text="${turma.descricaoDisciplina}" >001 - Tecnologias Web</h4>
+</div>
+
+<div class="container visualizarTurma">
+
+    <div class="row">
+        <div class="container-fluid">
+            <label class="container" >Curso: <span th:text="${turma.descricaoCurso}" >Sistemas de Informação</span></label>
+            <label class="container">Unidade: <span th:text="${turma.descricaoUnidade}" >Barreiro</span></label>
+            <a  th:href="@{ http://localhost:8080/jf/hasEquipe(jf_codigo=${jf_codigo}) }" title="Visualizar JF">
+                <button type="button" class="btn btn-success ">Finalizar Equipe</button>
+            </a>
+        </div>
+
+
+
+        <!-- direita -->
+        <div class="col">
+            <input type="hidden" id="modal" th:value="${modal}">
+
+            <form class="form-signin" action="./adicionarMembro" method="POST">
+                <h5 class="tituloSecundario">Adicionar alunos:</h5>
+                <div class="input-group">
+                    <input type="text" id="buscarAluno" name="aluno_nome" class="form-control" placeholder="Digite o nome do aluno" autofocus/>
+                    <input type="hidden" name="codigo_equipe" th:value="${equipe}"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-success" id="adicionarAluno" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <br>
+                <span class="feedbackErro" th:text="${feedbackErro}" ></span>
+                <span class="feedbackOk" th:text="${feedbackOk}" ></span>
+
+                <h5 class="tituloSecundario">Alunos adicionados:</h5>
+                <table class="table">
+                    <tbody>
+                    <tr th:each="membro : ${membros}">
+                        <td th:value="${membro.codigo}" th:text="${membro.nome}"></td>
+                        <td>
+                            <a th:href="@{http://localhost:8080/jf/excluirAluno?(codigoEquipe=${equipe},codigoAluno=${membro.codigo})}">
+                                <i class="fas fa-times" th:value="${membro.codigo}"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- rodape -->
+<div class="rodape container-fluid"></div>
+</body>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="http://localhost:8080/js/val.js"></script>
+<script>$ ('#buscarAluno').autocomplete ({source :  'http://localhost:8080/aluno/buscar'});</script>
+</html>

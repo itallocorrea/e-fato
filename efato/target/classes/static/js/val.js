@@ -49,7 +49,7 @@ $(document).ready(function(){
 
     deveMostrarCurso(document.getElementsByName("tipo")[1].checked);
     $(".tipo").click(function(){
-         deveMostrarCurso(document.getElementsByName("tipo")[1].checked);
+        deveMostrarCurso(document.getElementsByName("tipo")[1].checked);
     });
 });
 function deveMostrarCurso(tipo) {
@@ -86,7 +86,7 @@ function adicionarAluno () {
 }
 
 // get params da URI
-function getParams() {
+function getParams () {
     let query = location.search.slice(1);
     let partes = query.split('&');
     let data = {};
@@ -104,7 +104,6 @@ function getParams() {
 $(document).ready(function(){
     let controleModal =  document.getElementById('modal');
     if(controleModal){
-        $('#'+controleModal.value).dialog();
+        $('#'+controleModal.value).modal('show');
     }
 });
-

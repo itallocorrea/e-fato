@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="http://localhost:8080/css/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
     <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
     <script src="http://localhost:8080/js/popper.min.js"></script>
@@ -36,69 +35,58 @@
         <!-- direita -->
         <div class="col">
             <div class="direita form-group row">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <td colspan="2"><h5 class="tituloSecundario">Julgamento de fatos:</h5></td>
-                            <td class="botoes-acoes">
-                                <a th:href="@{http://localhost:8080/jf/cadastro( turma_codigo=${turma.codigo},jf_codigo=0 )}">
-                                    <i class="fas fa-plus" title="Novo JF"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Descrição</td>
-                            <td>Status</td>
-                            <td>Visualizar Equipe</td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="jf : ${jfs}">
-                            <td th:text="${jf.descricao}" ></td>
-                            <td th:text="${jf.descricaoStatus}"></td>
-                            <td>
-                                <a th:href="@{ http://localhost:8080/jf/hasEquipe(jf_codigo=${jf.codigo} ) }" title="Visualizar JF">
-                                    <i class="fas fa-users"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td colspan="2"><h5 class="tituloSecundario">Julgamento de fatos:</h5></td>
+                        <td class="botoes-acoes">
+                            <a th:href="@{http://localhost:8080/jf/cadastro( turma_codigo=${turma.codigo},jf_codigo=0 )}">
+                                <i class="fas fa-plus" title="Novo JF"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Descrição</td>
+                        <td>Status</td>
+                        <td>Visualizar Equipe</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="jf : ${jfs}">
+                        <td th:text="${jf.descricao}" ></td>
+                        <td th:text="${jf.descricaoStatus}"></td>
+                        <td>
+                            <a th:href="@{ http://localhost:8080/jf/hasEquipe(jf_codigo=${jf.codigo} ) }" title="Visualizar JF">
+                                <i class="fas fa-users"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
             <input type="hidden" id="modal" th:value="${modal}">
+
             <!--modal #modalSemEquipe-->
-            <div class="modal" role="dialog" id="modalSemEquipe" title="Adicionar equipe">
-                <p>Você não está em nenhuma equipe.</p>
-                <form class="form-signin" action="./adicionarAluno" method="POST">
-                    <h5 class="tituloSecundario">Adicionar alunos:</h5>
-                    <div class="input-group">
-                        <input type="text" id="buscarAluno" name="aluno_nome" class="form-control" placeholder="Digite o nome do aluno" autofocus/>
-                        <input type="hidden" name="codigo" th:value="${codigo}"/>
-                        <div class="input-group-append">
-                            <button class="btn btn-success" id="adicionarAluno" type="submit">
-                                <i class="fas fa-search"></i>
+            <div class="modal" role="dialog" id="modalSemEquipe">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Sua equipe</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+                        <div class="modal-body">
+                            <p>Você não está em nenhuma equipe.</p>
+                            <a id="criarEquipe" th:href="@{ http://localhost:8080/jf/criarEquipe(turma_codigo=${turma.codigo},jf_codigo=) }" title="Visualizar JF">
+                                <button type="button" class="btn btn-success ">Criar equipe</button>
+                            </a>
+                        </div>
+                        <div class="modal-footer">
+
+                        </div>
                     </div>
-
-                    <br>
-                    <span class="feedbackErro" th:text="${feedbackErro}" ></span>
-                    <span class="feedbackOk" th:text="${feedbackOk}" ></span>
-
-                    <h5 class="tituloSecundario">Alunos adicionados:</h5>
-                    <table class="table">
-                        <tbody>
-                        <tr th:each="aluno : ${alunos}">
-                            <td th:value="${aluno.codigo}" th:text="${aluno.nome}"></td>
-                            <td>
-                                <a th:href="@{http://localhost:8080/turma/excluirAluno?(codigoTurma=${codigo},codigoAluno=${aluno.codigo})}">
-                                    <i class="fas fa-times" th:value="${aluno.codigo}"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
+                </div>
             </div>
 
             <!--modal #modalComEquipe-->
@@ -122,8 +110,12 @@
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-success "><i class="fas fa-arrow-right"></i></button>
+                            <a  th:href="@{ http://localhost:8080/jf/sairEquipe(codigo_equipe=${turma.codigo}) }" title="Visualizar JF">
+                                <button type="button" class="btn btn-danger ">Sair equipe</button>
+                            </a>
+                            <button type="button" class="btn btn-success ">Ir para JF  <i class="fas fa-arrow-right"></i></button>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -137,12 +129,8 @@
 <!-- rodape -->
 <div class="rodape container-fluid"></div>
 </body>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="http://localhost:8080/js/val.js"></script>
-<script>$ ('#buscarAluno').autocomplete ({source :  'http://localhost:8080/aluno/buscar'});</script>
 <script>
     document.getElementById('criarEquipe').href += '=' + getParams().jf_codigo;
 </script>
-
 </html>
