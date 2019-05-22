@@ -1,3 +1,10 @@
+var recursiva = function () {
+    console.log('chamou');
+    setTimeout(recursiva,10000);
+};
+
+recursiva();
+
 //verificar se login alfanumerico de 5 a 10
 $(document).ready(function(){
     $("#login").focusout(function(){

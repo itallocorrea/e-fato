@@ -1,5 +1,6 @@
 package br.com.puc.efato.controllers;
 
+import br.com.puc.efato.repositories.JFRepository;
 import br.com.puc.efato.repositories.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,4 +12,8 @@ public class ProfessorController {
 
 	@Autowired
 	private ProfessorRepository professorRepository;
+
+	@Autowired
+	private JFRepository jfRepository;
+
 }

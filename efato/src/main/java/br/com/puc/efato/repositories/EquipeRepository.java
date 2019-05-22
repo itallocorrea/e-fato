@@ -1,12 +1,11 @@
 package br.com.puc.efato.repositories;
 
-import java.util.List;
-
+import br.com.puc.efato.models.db.Equipe;
+import br.com.puc.efato.models.db.JF;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.puc.efato.models.db.Equipe;
-import br.com.puc.efato.models.db.JF;
+import java.util.List;
 
 @Repository
 public interface EquipeRepository extends CrudRepository<Equipe, Long>{

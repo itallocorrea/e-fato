@@ -140,7 +140,7 @@ public class TurmaController {
 
     @RequestMapping(value = "/pesquisarTurma", method = RequestMethod.GET)
     public ModelAndView pesquisarTurmas(@RequestParam(required = false) String disciplina_codigo,
-                                        @RequestParam(required = false) String curso_codigo,
+                                                                                                                                                                             @RequestParam(required = false) String curso_codigo,
                                         @RequestParam(required = false) String unidade_codigo){
         ModelAndView modelAndView = new ModelAndView("pesquisarTurma");
         modelAndView.addObject(ATRIBUTO_DISCIPLINAS, disciplinaRepository.findAll());

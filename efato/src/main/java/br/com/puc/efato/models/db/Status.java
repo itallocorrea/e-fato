@@ -12,6 +12,15 @@ public class Status {
 
     private String descricao;
 
+    public Status() {
+
+    }
+
+    public Status (long codigo, String descricao) {
+        this.codigo = codigo;
+        this.descricao = descricao;
+    }
+
     public long getCodigo() {
         return codigo;
     }

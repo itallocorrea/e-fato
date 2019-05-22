@@ -13,6 +13,8 @@ import java.util.List;
 
 @Repository
 public interface FatoRepository extends CrudRepository<Fato, String>  {
+    Fato findByCodigo(int codigo);
+
     List<Fato> findByJf(JF jf);
 
     @Transactional

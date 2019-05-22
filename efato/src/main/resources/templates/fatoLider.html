@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>eFato - Cadastro de usuário</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://localhost:8080/css/main.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+    <link rel="stylesheet" href="http://localhost:8080/css/bootstrap.min.css">
+    <script src="http://localhost:8080/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="http://localhost:8080/js/popper.min.js"></script>
+    <script src="http://localhost:8080/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <!-- cabecalho -->
+    <div class="cabecalho container">
+        <h4 class="tituloPrincipal">Estatísticas - HTML</h4>
+    </div>
+
+    <div class="container fato">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <img src="./img/fato1.png">
+                </div>
+                <div class="col">
+                    <p th:text="${fato.texto}"></p>
+
+                    <p class="text-center">
+                        <button class="btn btn-success resposta" title="Verdadeiro!">
+                            <i class="fas fa-check"></i>
+                        </button>
+
+                        <button class="btn btn-danger resposta" title="Falso!">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- rodape -->
+    <div class="rodape container-fluid"></div>
+</body>
+<script src="http://localhost:8080/js/val.js"></script>
+<script src="http://localhost:8080/js/jquery-3.3.1.min.js"></script>
+</html>
