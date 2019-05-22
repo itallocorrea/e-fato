@@ -50,8 +50,10 @@ public class FatoController {
     }
 
     @RequestMapping(value = "/jogar", method = RequestMethod.GET)
-    public ModelAndView listarFatos(@RequestParam(required = false) Integer fato_codigo, HttpSession session){
+    public ModelAndView listarFatos(@RequestParam(required = false) Integer fato_codigo, @RequestParam(required = false) String href, HttpSession session){
         ModelAndView modelAndView = new ModelAndView("fatoLider");
+        if(session.getAttribute(ATRIBUTO_USUARIO_LOGADO) == null)
+            return null;
         long idAluno =  getAlunoLogado(session).getCodigo();
         boolean hasJfEmExecucao = false;
         JF jfEmExecucao = new JF();
@@ -71,6 +73,7 @@ public class FatoController {
             if(fato_codigo == null) {
                 modelAndView.addObject("fato",fatos.get(0));
             } else {
+                //:TODO e o fim do loop ?
                 modelAndView.addObject("fato",fatos.get(fato_codigo + 1));
                 }
         } else {
@@ -79,6 +82,7 @@ public class FatoController {
 
         return modelAndView;
     }
+
 
     @RequestMapping(value = "/cadastrar", method = RequestMethod.POST)
     public RedirectView cadastrar(FatoRequest fatoRequest){

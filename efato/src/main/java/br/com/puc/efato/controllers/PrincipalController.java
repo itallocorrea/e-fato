@@ -1,6 +1,8 @@
 package br.com.puc.efato.controllers;
 
+import br.com.puc.efato.Session;
 import br.com.puc.efato.models.api.LoginRequest;
+import br.com.puc.efato.models.db.Aluno;
 import br.com.puc.efato.repositories.AlunosRepository;
 import br.com.puc.efato.repositories.ProfessorRepository;
 import br.com.puc.efato.utils.Utils;
@@ -37,6 +39,7 @@ public class PrincipalController {
     public RedirectView login(LoginRequest loginRequest, HttpSession session){
         if(Utils.isLoginValido(loginRequest, alunosRepository, professorRepository)){
             session.setAttribute(ATRIBUTO_USUARIO_LOGADO, loginRequest);
+            Session.alunoLogado = getAlunoLogado(session);
             if(TIPO_ALUNO.equals(Utils.tipoUsuario(loginRequest.getLogin(), alunosRepository, professorRepository)))
                 return new RedirectView("turma/minhasTurmas");
             else
@@ -58,7 +61,9 @@ public class PrincipalController {
         return new ModelAndView("erro");
     }
 
-
+    private Aluno getAlunoLogado(HttpSession session){
+        return alunosRepository.findByLogin(((LoginRequest) session.getAttribute(ATRIBUTO_USUARIO_LOGADO)).getLogin());
+    }
 
 
 }

@@ -1,6 +1,7 @@
 var recursiva = function () {
-    console.log('chamou');
-    setTimeout(recursiva,10000);
+    console.log('verificação JF');
+    chamarJF();
+    setTimeout(recursiva,8000);
 };
 
 recursiva();
@@ -114,3 +115,16 @@ $(document).ready(function(){
         $('#'+controleModal.value).modal('show');
     }
 });
+
+
+function chamarJF(){
+    let fato_codigo = document.getElementById("fato_codigo");
+    if(window.location.href !== "http://localhost:8080/"){
+        let link = "http://localhost:8080/fato/jogar?href="+document.referrer;
+        if(fato_codigo)
+            link += "&fato_codigo="+fato_codigo.value;
+        console.log(link);
+        window.location.href =  link;
+    }
+
+}

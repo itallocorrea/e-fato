@@ -25,11 +25,11 @@
         <div class="container">
             <div class="row">
                 <div class="col">
-                    <img src="./img/fato1.png">
+                    <img src="http://lorempixel.com/400/400/">
                 </div>
                 <div class="col">
                     <p th:text="${fato.texto}"></p>
-
+                    <input type="hidden" th:value="${fato.codigo}" id="fato_codigo">
                     <p class="text-center">
                         <button class="btn btn-success resposta" title="Verdadeiro!">
                             <i class="fas fa-check"></i>
